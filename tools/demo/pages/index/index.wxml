@@ -1,1 +1,0 @@
-<comp prop-a="{{propA}}" bindupdate="onUpdate"></comp>

@@ -4,8 +4,7 @@
     "description": "Mobx binding utils for WeChat miniprogram",
     "main": "miniprogram_dist/index.js",
     "scripts": {
-        "dev": "gulp dev --develop",
-        "watch": "gulp watch --develop --watch",
+        "dev": "gulp dev",
         "build": "gulp",
         "dist": "npm run build",
         "clean-dev": "gulp clean --develop",
@@ -13,7 +12,7 @@
         "test": "jest ./test/* --bail",
         "coverage": "jest ./test/* --coverage --bail",
         "lint": "eslint \"src/**/*.js\"",
-        "lint-tools": "eslint \"tools/**/*.js\" --rule \"import/no-extraneous-dependencies: false\""
+        "lint-tools": "eslint \"tools/**/*.js\""
     },
     "miniprogram": "miniprogram_dist",
     "jest": {
