@@ -17,7 +17,7 @@ function getWebpackConfig(production) {
       libraryTarget: 'commonjs2',
     },
     target: 'node',
-    externals: [nodeExternals()], // 忽略 node_modules
+    externals: [nodeExternals()],
     module: {
       rules: [{
         test: /\.js$/i,

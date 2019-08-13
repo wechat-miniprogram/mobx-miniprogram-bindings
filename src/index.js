@@ -3,6 +3,8 @@ import {reaction} from 'mobx-miniprogram'
 function _createActions(methods, options) {
   const {store, actions} = options
 
+  if (!actions) return
+
   // for array-typed fields definition
   if (typeof store === 'undefined') {
     throw new Error('[mobx-miniprogram] no store specified')
@@ -15,7 +17,7 @@ function _createActions(methods, options) {
         store[field](...args)
       }
     })
-  } else if (typeof actions === 'object' && actions) {
+  } else if (typeof actions === 'object') {
     // for object-typed fields definition
     Object.keys(actions).forEach((field) => {
       const def = actions[field]
@@ -103,15 +105,21 @@ export const storeBindingsBehavior = Behavior({
     if (!defFields.methods) {
       defFields.methods = {}
     }
-    const options = defFields.storeBindings
-    _createActions(defFields.methods, options)
+    const storeBindings = defFields.storeBindings
     defFields.methods._mobxMiniprogramBindings = function () {
-      return options
+      return storeBindings
+    }
+    if (storeBindings) {
+      _createActions(defFields.methods, storeBindings)
     }
   },
   attached() {
     if (typeof this._mobxMiniprogramBindings !== 'function') return
     const storeBindings = this._mobxMiniprogramBindings()
+    if (!storeBindings) {
+      this._mobxMiniprogramBindings = null
+      return
+    }
     const destoryStoreBindings = _createDataFieldsReactions(this, storeBindings)
     this._mobxMiniprogramBindings = {
       destoryStoreBindings
