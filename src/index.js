@@ -37,6 +37,7 @@ function _createDataFieldsReactions(target, options) {
   // setData combination
   let pendingSetData = null
   function applySetData() {
+    if (pendingSetData === null) return
     const data = pendingSetData
     pendingSetData = null
     target.setData(data)
@@ -50,7 +51,7 @@ function _createDataFieldsReactions(target, options) {
   }
 
   // handling fields
-  let reactions
+  let reactions = []
   if (fields instanceof Array) {
     // for array-typed fields definition
     if (typeof store === 'undefined') {
@@ -89,10 +90,14 @@ function _createDataFieldsReactions(target, options) {
     })
   }
 
-  const destoryStoreBindings = () => {
+  const destroyStoreBindings = () => {
     reactions.forEach((reaction) => reaction())
   }
-  return destoryStoreBindings
+
+  return {
+    updateStoreBindings: applySetData,
+    destroyStoreBindings
+  }
 }
 
 export function createStoreBindings(target, options) {
@@ -120,14 +125,18 @@ export const storeBindingsBehavior = Behavior({
       this._mobxMiniprogramBindings = null
       return
     }
-    const destoryStoreBindings = _createDataFieldsReactions(this, storeBindings)
-    this._mobxMiniprogramBindings = {
-      destoryStoreBindings
-    }
+    this._mobxMiniprogramBindings = _createDataFieldsReactions(this, storeBindings)
   },
   detached() {
     if (this._mobxMiniprogramBindings) {
-      this._mobxMiniprogramBindings.destoryStoreBindings()
+      this._mobxMiniprogramBindings.destroyStoreBindings()
     }
   },
+  methods: {
+    updateStoreBindings() {
+      if (this._mobxMiniprogramBindings && typeof this._mobxMiniprogramBindings !== 'function') {
+        this._mobxMiniprogramBindings.updateStoreBindings()
+      }
+    }
+  }
 })

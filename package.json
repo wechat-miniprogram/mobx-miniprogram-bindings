@@ -28,7 +28,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/wechat-miniprogram/mobx-miniprogram.git"
+        "url": "git+https://github.com/wechat-miniprogram/mobx-miniprogram-bindings.git"
     },
     "keywords": [
         "mobx",
@@ -38,9 +38,9 @@
     "author": "wechat-miniprogram",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/wechat-miniprogram/mobx-miniprogram/issues"
+        "url": "https://github.com/wechat-miniprogram/mobx-miniprogram-bindings/issues"
     },
-    "homepage": "https://github.com/wechat-miniprogram/mobx-miniprogram#readme",
+    "homepage": "https://github.com/wechat-miniprogram/mobx-miniprogram-bindings#readme",
     "devDependencies": {
         "babel-core": "^6.26.3",
         "babel-loader": "^7.1.5",
@@ -62,11 +62,11 @@
         "gulp-sourcemaps": "^2.6.5",
         "jest": "^23.5.0",
         "miniprogram-simulate": "^1.0.7",
+        "mobx-miniprogram": "^4.0.0",
         "through2": "^2.0.3",
         "vinyl": "^2.2.0",
         "webpack": "^4.29.5",
-        "webpack-node-externals": "^1.7.2",
-        "mobx-miniprogram": "^4.0.0"
+        "webpack-node-externals": "^1.7.2"
     },
     "peerDependencies": {
         "mobx-miniprogram": "^4.0.0"

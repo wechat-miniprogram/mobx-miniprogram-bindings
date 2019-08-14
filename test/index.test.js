@@ -22,7 +22,7 @@ test('manually creation', async () => {
   const componentId = _.load({
     template: '<view>{{a}}+{{b}}={{c}}</view>',
     attached() {
-      this.destroyStoreBindings = createStoreBindings(this, {
+      this.storeBindings = createStoreBindings(this, {
         store,
         fields: {
           a: 'numA',
@@ -33,7 +33,7 @@ test('manually creation', async () => {
       })
     },
     detached() {
-      this.destroyStoreBindings()
+      this.storeBindings.destroyStoreBindings()
     }
   })
   const component = _.render(componentId)
@@ -45,11 +45,10 @@ test('manually creation', async () => {
       expect(_.match(component.dom, '<wx-view>1+2=3</wx-view>')).toBe(true)
 
       component.instance.update()
-      wx.nextTick(() => {
-        expect(_.match(component.dom, '<wx-view>2+3=5</wx-view>')).toBe(true)
+      component.instance.storeBindings.updateStoreBindings()
+      expect(_.match(component.dom, '<wx-view>2+3=5</wx-view>')).toBe(true)
 
-        resolve()
-      })
+      resolve()
     })
   })
 })
@@ -86,16 +85,15 @@ test('declarative creation', async () => {
       expect(_.match(component.dom, '<wx-view>1+2=3</wx-view>')).toBe(true)
 
       component.instance.up()
-      wx.nextTick(() => {
-        expect(_.match(component.dom, '<wx-view>2+3=5</wx-view>')).toBe(true)
+      component.instance.updateStoreBindings()
+      expect(_.match(component.dom, '<wx-view>2+3=5</wx-view>')).toBe(true)
 
-        resolve()
-      })
+      resolve()
     })
   })
 })
 
-test('auto destroy', async () => {
+test('destroy', async () => {
   const store = observable({
     numA: 1,
     numB: 2,
@@ -121,7 +119,12 @@ test('auto destroy', async () => {
   })
   const componentId = _.load({
     template: '<custom-comp />',
-    behaviors: [storeBindingsBehavior]
+    attached() {
+      this.storeBindings = createStoreBindings(this, {})
+    },
+    detached() {
+      this.storeBindings.destroyStoreBindings()
+    }
   })
   const component = _.render(componentId)
   const parent = document.createElement('div')
