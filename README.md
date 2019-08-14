@@ -173,11 +173,11 @@ Page({
 
 只要 `actions` 不为空，则 `store` 字段必填。
 
-### 延迟更新与强制更新
+### 延迟更新与立刻更新
 
-为了提升性能，在 store 中的字段被更新后，并不会立刻同步更新到 `this.data` 上，而是等到下个 `wx.nextTick` 调用时才更新。
+为了提升性能，在 store 中的字段被更新后，并不会立刻同步更新到 `this.data` 上，而是等到下个 `wx.nextTick` 调用时才更新。（这样可以显著减少 setData 的调用次数。）
 
-如果需要立刻更新，可以使用：
+如果需要立刻更新，可以调用：
 
 * `this.updateStoreBindings()` （在 **behavior 绑定** 中）
 * `this.storeBindings.updateStoreBindings()`  （在 **手工绑定** 中）
