@@ -10,7 +10,7 @@
 
 需要小程序基础库版本 >= 2.2.3 的环境。
 
-也可以直接参考这个代码片段（在微信开发者工具中打开）： [https://developers.weixin.qq.com/s/du5RwCmz7xaw](https://developers.weixin.qq.com/s/du5RwCmz7xaw) 。
+也可以直接参考这个代码片段（在微信开发者工具中打开）： [https://developers.weixin.qq.com/s/36j8NZmC74ac](https://developers.weixin.qq.com/s/36j8NZmC74ac) 。
 
 1. 安装 `mobx-miniprogram` 和 `mobx-miniprogram-bindings` ：
 
