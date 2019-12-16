@@ -56,6 +56,10 @@ Component({
   data: {
     someData: '...'
   },
+  /**
+   * 也可配置数组，支持多store场景
+   * @exmaple storeBindings: [{store: storeA, fields:{sumA: 'sum'}}, {store: storeB, fields:{sumB: 'sum'}}]
+   */
   storeBindings: {
     store,
     fields: {

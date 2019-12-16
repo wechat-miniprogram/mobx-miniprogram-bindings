@@ -194,3 +194,58 @@ test('function-typed fields binding', async () => {
     })
   })
 })
+
+test('binding multi store in custom components', async () => {
+  const storeA = observable({
+    a_A: 1,
+    b_A: 2,
+    get sum_A() {
+      return this.a_A + this.b_A
+    },
+    update: action(function () {
+      this.a_A = this.a_A * 10
+      this.b_A = this.b_A * 10
+    })
+  })
+
+  const storeB = observable({
+    a_B: 1,
+    b_B: 2,
+    get sum_B() {
+      return this.a_B + this.b_B
+    },
+    update: action(function () {
+      this.a_B = this.a_B * 20
+      this.b_B = this.b_B * 20
+    })
+  })
+
+  const componentAB = _.load({
+    template: '<view><text>{{a_A}}+{{b_A}}={{sum_A}}</text><text>{{a_B}}+{{b_B}}={{sum_B}}</text></view>',
+    behaviors: [storeBindingsBehavior],
+    storeBindings: [{
+      store: storeA,
+      fields: ['a_A', 'b_A', 'sum_A'],
+      actions: {updateInStoreA: 'update'}
+    }, {
+      store: storeB,
+      fields: ['a_B', 'b_B', 'sum_B'],
+      actions: {updateInStoreB: 'update'}
+    }]
+  })
+  const component = _.render(componentAB)
+  const parent = document.createElement('div')
+  component.attach(parent)
+  await new Promise((resolve) => {
+    wx.nextTick(() => {
+      expect(_.match(component.dom, '<wx-view><wx-text>1+2=3</wx-text><wx-text>1+2=3</wx-text></wx-view>')).toBe(true)
+      component.instance.updateInStoreA()
+      component.instance.updateInStoreB()
+      component.instance.updateStoreBindings()
+      wx.nextTick(() => {
+        expect(_.match(component.dom, '<wx-view><wx-text>10+20=30</wx-text><wx-text>20+40=60</wx-text></wx-view>')).toBe(true)
+        resolve()
+      })
+    })
+  })
+})
