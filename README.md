@@ -81,6 +81,10 @@ Component({
 
 4. 在 Page 构造器中使用：
 
+如果小程序基础库版本在 2.9.2 以上，可以直接像上面 Component 构造器那样引入 behaviors 。
+
+如果需要比较好的兼容性，可以使用下面这种方式（或者直接改用 Component 构造器来创建页面）。
+
 ```js
 import { createStoreBindings } from 'mobx-miniprogram-bindings'
 import { store } from './store'
