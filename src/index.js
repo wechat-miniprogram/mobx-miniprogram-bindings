@@ -110,12 +110,18 @@ export const storeBindingsBehavior = Behavior({
     if (!defFields.methods) {
       defFields.methods = {}
     }
-    const storeBindings = defFields.storeBindings
+    const {storeBindings} = defFields
     defFields.methods._mobxMiniprogramBindings = function () {
       return storeBindings
     }
     if (storeBindings) {
-      _createActions(defFields.methods, storeBindings)
+      if (Array.isArray(storeBindings)) {
+        storeBindings.forEach(function (binding) {
+          _createActions(defFields.methods, binding)
+        })
+      } else {
+        _createActions(defFields.methods, storeBindings)
+      }
     }
   },
   attached() {
@@ -125,17 +131,36 @@ export const storeBindingsBehavior = Behavior({
       this._mobxMiniprogramBindings = null
       return
     }
-    this._mobxMiniprogramBindings = _createDataFieldsReactions(this, storeBindings)
+    if (Array.isArray(storeBindings)) {
+      const that = this
+      this._mobxMiniprogramBindings = storeBindings.map(function (item) {
+        return _createDataFieldsReactions(that, item)
+      })
+    } else {
+      this._mobxMiniprogramBindings = _createDataFieldsReactions(this, storeBindings)
+    }
   },
   detached() {
     if (this._mobxMiniprogramBindings) {
-      this._mobxMiniprogramBindings.destroyStoreBindings()
+      if (Array.isArray(this._mobxMiniprogramBindings)) {
+        this._mobxMiniprogramBindings.forEach(function (bd) {
+          bd.destroyStoreBindings()
+        })
+      } else {
+        this._mobxMiniprogramBindings.destroyStoreBindings()
+      }
     }
   },
   methods: {
     updateStoreBindings() {
       if (this._mobxMiniprogramBindings && typeof this._mobxMiniprogramBindings !== 'function') {
-        this._mobxMiniprogramBindings.updateStoreBindings()
+        if (Array.isArray(this._mobxMiniprogramBindings)) {
+          this._mobxMiniprogramBindings.forEach(function (bd) {
+            bd.updateStoreBindings()
+          })
+        } else {
+          this._mobxMiniprogramBindings.updateStoreBindings()
+        }
       }
     }
   }
