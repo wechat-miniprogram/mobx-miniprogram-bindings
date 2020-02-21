@@ -14,7 +14,7 @@ function _createActions(methods, options) {
     // eslint-disable-next-line arrow-body-style
     actions.forEach((field) => {
       methods[field] = function (...args) {
-        store[field](...args)
+        return store[field](...args)
       }
     })
   } else if (typeof actions === 'object') {
@@ -25,7 +25,7 @@ function _createActions(methods, options) {
         throw new Error('[mobx-miniprogram] unrecognized field definition')
       }
       methods[field] = function (...args) {
-        store[def](...args)
+        return store[def](...args)
       }
     })
   }
