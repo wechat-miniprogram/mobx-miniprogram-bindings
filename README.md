@@ -56,10 +56,6 @@ Component({
   data: {
     someData: '...'
   },
-  /**
-   * 也可配置数组，支持多store场景
-   * @exmaple storeBindings: [{store: storeA, fields:{sumA: 'sum'}}, {store: storeB, fields:{sumB: 'sum'}}]
-   */
   storeBindings: {
     store,
     fields: {
@@ -129,6 +125,20 @@ Component({
 })
 ```
 
+也可以把 `storeBindings` 设置为一个数组，这样可以同时绑定多个 `store` ：
+
+```js
+import { storeBindingsBehavior } from 'mobx-miniprogram-bindings'
+Component({
+  behaviors: [storeBindingsBehavior],
+  storeBindings: [{
+    /* 绑定配置 1 */
+  }, {
+    /* 绑定配置 2 */
+  }]
+})
+```
+
 ### 手工绑定
 
 **手工绑定** 适用于全部场景。做法：使用 `createStoreBindings` 创建绑定，它会返回一个包含清理函数的对象用于取消绑定。
@@ -181,6 +191,8 @@ Page({
 
 只要 `actions` 不为空，则 `store` 字段必填。
 
+## 注意事项
+
 ### 延迟更新与立刻更新
 
 为了提升性能，在 store 中的字段被更新后，并不会立刻同步更新到 `this.data` 上，而是等到下个 `wx.nextTick` 调用时才更新。（这样可以显著减少 setData 的调用次数。）
@@ -189,3 +201,29 @@ Page({
 
 * `this.updateStoreBindings()` （在 **behavior 绑定** 中）
 * `this.storeBindings.updateStoreBindings()`  （在 **手工绑定** 中）
+
+### 关于部分更新
+
+如果只是更新对象中的一部分（子字段），是不会引发界面变化的！例如：
+
+```js
+Component({
+  behaviors: [storeBindingsBehavior],
+  storeBindings: {
+    store,
+    fields: ['someObject']
+  }
+})
+```
+
+如果尝试在 `store` 中：
+
+```js
+this.someObject.someField = 'xxx'
+```
+
+这样是不会触发界面更新的。请考虑改成：
+
+```js
+this.someObject = Object.assign({}, this.someObject, { someField: 'xxx' })
+```
