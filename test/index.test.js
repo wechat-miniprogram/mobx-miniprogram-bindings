@@ -249,3 +249,44 @@ test('binding multi store in custom components', async () => {
     })
   })
 })
+
+test('structural comparison', async () => {
+  const store = observable({
+    nums: {
+      a: 1,
+      b: 2,
+    },
+    update: action(function () {
+      this.nums = {
+        a: this.nums.b,
+        b: this.nums.a + this.nums.b,
+      }
+    })
+  })
+
+  const componentId = _.load({
+    template: '<view>{{nums.a}}+{{nums.b}}</view>',
+    behaviors: [storeBindingsBehavior],
+    storeBindings: {
+      structuralComparison: false,
+      store,
+      fields: ['nums'],
+      actions: ['update']
+    }
+  })
+  const component = _.render(componentId)
+  const parent = document.createElement('div')
+  component.attach(parent)
+
+  await new Promise((resolve) => {
+    wx.nextTick(() => {
+      expect(_.match(component.dom, '<wx-view>1+2</wx-view>')).toBe(true)
+
+      component.instance.update()
+      component.instance.updateStoreBindings()
+      expect(_.match(component.dom, '<wx-view>2+3</wx-view>')).toBe(true)
+
+      resolve()
+    })
+  })
+})

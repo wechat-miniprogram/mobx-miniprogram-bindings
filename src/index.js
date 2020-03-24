@@ -1,4 +1,4 @@
-import {reaction} from 'mobx-miniprogram'
+import {reaction, comparer} from 'mobx-miniprogram'
 
 function _createActions(methods, options) {
   const {store, actions} = options
@@ -32,7 +32,10 @@ function _createActions(methods, options) {
 }
 
 function _createDataFieldsReactions(target, options) {
-  const {store, fields} = options
+  const {store, fields, structuralComparison} = options
+
+  // choose equal method
+  const equals = structuralComparison ? comparer.structural : undefined
 
   // setData combination
   let pendingSetData = null
@@ -62,6 +65,7 @@ function _createDataFieldsReactions(target, options) {
       return reaction(() => store[field], (value) => {
         scheduleSetData(field, value)
       }, {
+        equals,
         fireImmediately: true
       })
     })
@@ -73,6 +77,7 @@ function _createDataFieldsReactions(target, options) {
         return reaction(() => def.call(target, store), (value) => {
           scheduleSetData(field, value)
         }, {
+          equals,
           fireImmediately: true
         })
       }
@@ -85,6 +90,7 @@ function _createDataFieldsReactions(target, options) {
       return reaction(() => store[def], (value) => {
         scheduleSetData(String(field), value)
       }, {
+        equals,
         fireImmediately: true
       })
     })
