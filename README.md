@@ -202,6 +202,17 @@ Page({
 * `this.updateStoreBindings()` （在 **behavior 绑定** 中）
 * `this.storeBindings.updateStoreBindings()`  （在 **手工绑定** 中）
 
+### 与 miniprogram-computed 一起使用
+
+与 [miniprogram-computed](https://github.com/wechat-miniprogram/computed) 时，在 behaviors 列表中 `computedBehavior` 必须在后面：
+
+```js
+Component({
+  behaviors: [storeBindingsBehavior, computedBehavior],
+  /* ... */
+})
+```
+
 ### 关于部分更新
 
 如果只是更新对象中的一部分（子字段），是不会引发界面变化的！例如：

@@ -1,6 +1,7 @@
 const {configure, observable, action} = require('mobx-miniprogram')
 const _ = require('./utils')
 const {storeBindingsBehavior, createStoreBindings} = require('../src/index')
+const computedBehavior = require('miniprogram-computed')
 
 // 不允许在动作外部修改状态
 configure({enforceActions: 'observed'})
@@ -285,6 +286,47 @@ test('structural comparison', async () => {
       component.instance.update()
       component.instance.updateStoreBindings()
       expect(_.match(component.dom, '<wx-view>2+3</wx-view>')).toBe(true)
+
+      resolve()
+    })
+  })
+})
+
+test('cooperate with miniprogram-computed', async () => {
+  const store = observable({
+    nums: [1, 2, 3],
+    update: action(function () {
+      this.nums = this.nums.concat(this.nums.length + 1)
+    })
+  })
+
+  const componentId = _.load({
+    template: '<view>{{sum}}</view>',
+    behaviors: [storeBindingsBehavior, computedBehavior],
+    storeBindings: {
+      structuralComparison: false,
+      store,
+      fields: ['nums'],
+      actions: ['update']
+    },
+    computed: {
+      sum(data) {
+        const nums = data.nums
+        return nums.reduce((s, o) => s + o, 0)
+      }
+    },
+  })
+  const component = _.render(componentId)
+  const parent = document.createElement('div')
+  component.attach(parent)
+
+  await new Promise((resolve) => {
+    wx.nextTick(() => {
+      expect(_.match(component.dom, '<wx-view>6</wx-view>')).toBe(true)
+
+      component.instance.update()
+      component.instance.updateStoreBindings()
+      expect(_.match(component.dom, '<wx-view>10</wx-view>')).toBe(true)
 
       resolve()
     })

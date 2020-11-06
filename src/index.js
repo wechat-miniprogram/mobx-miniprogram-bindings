@@ -1,4 +1,4 @@
-import {reaction, comparer} from 'mobx-miniprogram'
+import {reaction, comparer, toJS} from 'mobx-miniprogram'
 
 function _createActions(methods, options) {
   const {store, actions} = options
@@ -50,7 +50,7 @@ function _createDataFieldsReactions(target, options) {
       pendingSetData = {}
       wx.nextTick(applySetData)
     }
-    pendingSetData[field] = value
+    pendingSetData[field] = toJS(value)
   }
 
   // handling fields
@@ -140,10 +140,13 @@ export const storeBindingsBehavior = Behavior({
     if (Array.isArray(storeBindings)) {
       const that = this
       this._mobxMiniprogramBindings = storeBindings.map(function (item) {
-        return _createDataFieldsReactions(that, item)
+        const ret = _createDataFieldsReactions(that, item)
+        ret.updateStoreBindings()
+        return ret
       })
     } else {
       this._mobxMiniprogramBindings = _createDataFieldsReactions(this, storeBindings)
+      this._mobxMiniprogramBindings.updateStoreBindings()
     }
   },
   detached() {
