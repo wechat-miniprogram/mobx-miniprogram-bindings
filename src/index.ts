@@ -48,3 +48,5 @@ export const createStoreBindings = (target, options) => {
   createActions(target, options);
   return createDataFieldsReactions(target, options);
 };
+
+export const storeBindingsBehavior = behavior;
