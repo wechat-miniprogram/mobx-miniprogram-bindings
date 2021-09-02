@@ -49,7 +49,9 @@
   },
   "homepage": "https://github.com/wechat-miniprogram/mobx-miniprogram-bindings#readme",
   "devDependencies": {
+    "@babel/runtime": "^7.15.3",
     "@swc/core": "^1.2.83",
+    "@types/jest": "^27.0.1",
     "@types/node": "^16.7.10",
     "@typescript-eslint/eslint-plugin": "^2.23.0",
     "@typescript-eslint/parser": "^2.23.0",

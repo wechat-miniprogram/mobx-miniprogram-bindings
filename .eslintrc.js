@@ -14,6 +14,16 @@ module.exports = {
     jest: true,
     commonjs: true,
   },
+  globals: {
+    window: true,
+    document: true,
+    App: true,
+    Page: true,
+    Component: true,
+    Behavior: true,
+    wx: true,
+    getCurrentPages: true,
+  },
   plugins: ["@typescript-eslint", "prettier"],
   extends: [
     'eslint:recommended',
@@ -28,15 +38,5 @@ module.exports = {
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
-  },
-  globals: {
-    window: true,
-    document: true,
-    App: true,
-    Page: true,
-    Component: true,
-    Behavior: true,
-    wx: true,
-    getCurrentPages: true,
-  },
+  }
 };

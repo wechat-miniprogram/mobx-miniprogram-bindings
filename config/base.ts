@@ -14,7 +14,7 @@ export interface BaseConfig {
 const srcPath = path.resolve(__dirname, "../src");
 const bundlePath = path.resolve(__dirname, "../dist");
 const demoPath = path.resolve(__dirname, "../demo");
-const bundleInDemoPath = path.resolve(demoPath, "./mobx-miniprogram-bindings");
+const bundleInDemoPath = path.resolve(demoPath, "./src/mobx-miniprogram-bindings");
 const swcBuildPath = path.resolve(__dirname, "../swc_build");
 const typesPath = path.resolve(__dirname, "../types");
 const tsConfigPath = path.resolve(__dirname, "../tsconfig.json");

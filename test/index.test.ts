@@ -48,8 +48,7 @@ test("manually creation", async () => {
       component.instance.update();
       component.instance.storeBindings.updateStoreBindings();
       expect(_.match(component.dom, "<wx-view>2+3=5</wx-view>")).toBe(true);
-
-      resolve();
+      resolve("");
     });
   });
 });
@@ -89,7 +88,7 @@ test("declarative creation", async () => {
       component.instance.updateStoreBindings();
       expect(_.match(component.dom, "<wx-view>2+3=5</wx-view>")).toBe(true);
 
-      resolve();
+      resolve("");
     });
   });
 });
@@ -161,7 +160,7 @@ test("destroy", async () => {
             )
           ).toBe(true);
           expect(_.match(child, "<wx-view>2+3=5</wx-view>")).toBe(true);
-          resolve();
+          resolve("");
         });
       });
     });
@@ -205,7 +204,7 @@ test("function-typed fields binding", async () => {
       wx.nextTick(() => {
         expect(_.match(component.dom, "<wx-view>2+3=5</wx-view>")).toBe(true);
 
-        resolve();
+        resolve("");
       });
     });
   });
@@ -274,7 +273,7 @@ test("binding multi store in custom components", async () => {
             "<wx-view><wx-text>10+20=30</wx-text><wx-text>20+40=60</wx-text></wx-view>"
           )
         ).toBe(true);
-        resolve();
+        resolve("");
       });
     });
   });
@@ -316,7 +315,7 @@ test("structural comparison", async () => {
       component.instance.updateStoreBindings();
       expect(_.match(component.dom, "<wx-view>2+3</wx-view>")).toBe(true);
 
-      resolve();
+      resolve("");
     });
   });
 });
@@ -357,7 +356,7 @@ test("cooperate with miniprogram-computed", async () => {
       component.instance.updateStoreBindings();
       expect(_.match(component.dom, "<wx-view>10</wx-view>")).toBe(true);
 
-      resolve();
+      resolve("");
     });
   });
 });
