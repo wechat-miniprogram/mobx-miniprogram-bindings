@@ -1,7 +1,7 @@
 const { configure, observable, action } = require("mobx-miniprogram");
 const _ = require("./utils");
 const { storeBindingsBehavior, createStoreBindings } = require("../src/index");
-const computedBehavior = require("miniprogram-computed");
+const computedBehavior = require("miniprogram-computed").behavior;
 
 // 不允许在动作外部修改状态
 configure({ enforceActions: "observed" });
@@ -327,7 +327,6 @@ test("cooperate with miniprogram-computed", async () => {
       this.nums = this.nums.concat(this.nums.length + 1);
     }),
   });
-
   const componentId = _.load({
     template: "<view>{{sum}}</view>",
     behaviors: [storeBindingsBehavior, computedBehavior],

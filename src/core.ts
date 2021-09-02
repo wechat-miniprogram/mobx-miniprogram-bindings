@@ -119,6 +119,22 @@ export const createDataFieldsReactions = (target, options: IStoreBindings) => {
           }
         );
       }
+      if (typeof field !== "string" && typeof field !== "number") {
+        throw new Error("[mobx-miniprogram] unrecognized field definition");
+      }
+      if (typeof store === "undefined") {
+        throw new Error("[mobx-miniprogram] no store specified");
+      }
+      return reaction(
+        () => store[def],
+        (value) => {
+          scheduleSetData(String(field), value);
+        },
+        {
+          equals,
+          fireImmediately: true,
+        }
+      );
     });
   }
 

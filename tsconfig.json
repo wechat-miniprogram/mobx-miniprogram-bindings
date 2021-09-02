@@ -6,7 +6,8 @@
     "removeComments": true,
     "target": "ESNEXT",
     "lib": [
-      "ESNEXT"
+      "ESNEXT",
+      "DOM"
     ],
     "preserveConstEnums": true,
     "sourceMap": true,

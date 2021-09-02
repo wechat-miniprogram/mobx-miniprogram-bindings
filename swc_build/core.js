@@ -97,12 +97,22 @@ var createDataFieldsReactions = function(y, z) {
             equals: F,
             fireImmediately: !0
         });
+        if ("string" != typeof P && "number" != typeof P) throw new Error("[mobx-miniprogram] unrecognized field definition");
+        if (void 0 === A) throw new Error("[mobx-miniprogram] no store specified");
+        return _mobxMiniprogram.reaction(function() {
+            return A[Q];
+        }, function(S) {
+            J(String(P), S);
+        }, {
+            equals: F,
+            fireImmediately: !0
+        });
     }));
     return {
         updateStoreBindings: H,
         destroyStoreBindings: function() {
-            M.forEach(function(S) {
-                return S();
+            M.forEach(function(T) {
+                return T();
             });
         }
     };

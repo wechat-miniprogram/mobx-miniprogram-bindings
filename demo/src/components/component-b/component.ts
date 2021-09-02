@@ -11,7 +11,11 @@ Component({
     this.storeBindings = createStoreBindings(this, {
       namespace: "user_store",
       store: user,
-      fields: ["numA", "numB", "sum"],
+      fields: {
+        numA: "numA",
+        numB: (store) => {return store.numB},
+        sum: "sum",
+      },
       actions: {
         buttonTap: "update_user",
       },
