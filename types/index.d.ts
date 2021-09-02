@@ -11,9 +11,9 @@ interface IStoreBindings {
 declare type TData = WechatMiniprogram.Component.DataOption;
 declare type TProperty = WechatMiniprogram.Component.PropertyOption;
 declare type TMethod = WechatMiniprogram.Component.MethodOption;
-declare type StoreOptions = (Partial<WechatMiniprogram.Component.Data<TData>> & Partial<WechatMiniprogram.Component.Property<TProperty>> & Partial<WechatMiniprogram.Component.Method<TMethod>> & Partial<WechatMiniprogram.Component.OtherOption> & Partial<WechatMiniprogram.Component.Lifetimes> & {
+declare type StoreOptions = Partial<WechatMiniprogram.Component.Data<TData>> & Partial<WechatMiniprogram.Component.Property<TProperty>> & Partial<WechatMiniprogram.Component.Method<TMethod>> & Partial<WechatMiniprogram.Component.OtherOption> & Partial<WechatMiniprogram.Component.Lifetimes> & {
     storeBindings?: IStoreBindings;
-});
+};
 export declare function ComponentWithStore(options: StoreOptions): string;
 export declare function BehaviorWithStore(options: StoreOptions): string;
 export {};
