@@ -14,7 +14,7 @@
 
 1. 安装 `mobx-miniprogram` 和 `mobx-miniprogram-bindings` ：
 
-```
+```shell
 npm install --save mobx-miniprogram mobx-miniprogram-bindings
 ```
 
@@ -22,57 +22,55 @@ npm install --save mobx-miniprogram mobx-miniprogram-bindings
 
 ```js
 // store.js
-import { observable, action } from 'mobx-miniprogram'
+import { observable, action } from "mobx-miniprogram";
 
 export const store = observable({
-
   // 数据字段
   numA: 1,
   numB: 2,
 
   // 计算属性
   get sum() {
-    return this.numA + this.numB
+    return this.numA + this.numB;
   },
 
   // actions
   update: action(function () {
-    const sum = this.sum
-    this.numA = this.numB
-    this.numB = sum
-  })
-
-})
+    const sum = this.sum;
+    this.numA = this.numB;
+    this.numB = sum;
+  }),
+});
 ```
 
 3. 在 Component 构造器中使用：
 
 ```js
-import { storeBindingsBehavior } from 'mobx-miniprogram-bindings'
-import { store } from './store'
+import { storeBindingsBehavior } from "mobx-miniprogram-bindings";
+import { store } from "./store";
 
 Component({
   behaviors: [storeBindingsBehavior],
   data: {
-    someData: '...'
+    someData: "...",
   },
   storeBindings: {
     store,
     fields: {
       numA: () => store.numA,
       numB: (store) => store.numB,
-      sum: 'sum'
+      sum: "sum",
     },
     actions: {
-      buttonTap: 'update'
+      buttonTap: "update",
     },
   },
   methods: {
     myMethod() {
-      this.data.sum // 来自于 MobX store 的字段
-    }
-  }
-})
+      this.data.sum; // 来自于 MobX store 的字段
+    },
+  },
+});
 ```
 
 4. 在 Page 构造器中使用：
@@ -82,27 +80,27 @@ Component({
 如果需要比较好的兼容性，可以使用下面这种方式（或者直接改用 Component 构造器来创建页面）。
 
 ```js
-import { createStoreBindings } from 'mobx-miniprogram-bindings'
-import { store } from './store'
+import { createStoreBindings } from "mobx-miniprogram-bindings";
+import { store } from "./store";
 
 Page({
   data: {
-    someData: '...'
+    someData: "...",
   },
   onLoad() {
     this.storeBindings = createStoreBindings(this, {
       store,
-      fields: ['numA', 'numB', 'sum'],
-      actions: ['update'],
-    })
+      fields: ["numA", "numB", "sum"],
+      actions: ["update"],
+    });
   },
   onUnload() {
-    this.storeBindings.destroyStoreBindings()
+    this.storeBindings.destroyStoreBindings();
   },
   myMethod() {
-    this.data.sum // 来自于 MobX store 的字段
-  }
-})
+    this.data.sum; // 来自于 MobX store 的字段
+  },
+});
 ```
 
 ## 接口
@@ -116,27 +114,30 @@ Page({
 注意：你可以用 `Component` 构造器构造页面， [参考文档](https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/page.html#%E4%BD%BF%E7%94%A8-Component-%E6%9E%84%E9%80%A0%E5%99%A8%E6%9E%84%E9%80%A0%E9%A1%B5%E9%9D%A2) 。
 
 ```js
-import { storeBindingsBehavior } from 'mobx-miniprogram-bindings'
+import { storeBindingsBehavior } from "mobx-miniprogram-bindings";
 Component({
   behaviors: [storeBindingsBehavior],
   storeBindings: {
     /* 绑定配置（见下文） */
-  }
-})
+  },
+});
 ```
 
 也可以把 `storeBindings` 设置为一个数组，这样可以同时绑定多个 `store` ：
 
 ```js
-import { storeBindingsBehavior } from 'mobx-miniprogram-bindings'
+import { storeBindingsBehavior } from "mobx-miniprogram-bindings";
 Component({
   behaviors: [storeBindingsBehavior],
-  storeBindings: [{
-    /* 绑定配置 1 */
-  }, {
-    /* 绑定配置 2 */
-  }]
-})
+  storeBindings: [
+    {
+      /* 绑定配置 1 */
+    },
+    {
+      /* 绑定配置 2 */
+    },
+  ],
+});
 ```
 
 ### 手工绑定
@@ -146,37 +147,37 @@ Component({
 注意：在页面 onUnload （自定义组件 detached ）时一定要调用清理函数，否则将导致内存泄漏！
 
 ```js
-import { createStoreBindings } from 'mobx-miniprogram-bindings'
+import { createStoreBindings } from "mobx-miniprogram-bindings";
 
 Page({
   onLoad() {
     this.storeBindings = createStoreBindings(this, {
       /* 绑定配置（见下文） */
-    })
+    });
   },
   onUnload() {
-    this.storeBindings.destroyStoreBindings()
-  }
-})
+    this.storeBindings.destroyStoreBindings();
+  },
+});
 ```
 
 ### 绑定配置
 
 无论使用哪种绑定方式，都必须提供一个绑定配置对象。这个对象包含的字段如下：
 
-| 字段名 | 类型 | 含义 |
-| ------ | ---- | ---- |
-| store | 一个 MobX observable | 默认的 MobX store |
-| fields | 数组或者对象 | 用于指定需要绑定的 data 字段 |
-| actions | 数组或者对象 | 用于指定需要映射的 actions |
+| 字段名  | 类型                 | 含义                         |
+| ------- | -------------------- | ---------------------------- |
+| store   | 一个 MobX observable | 默认的 MobX store            |
+| fields  | 数组或者对象         | 用于指定需要绑定的 data 字段 |
+| actions | 数组或者对象         | 用于指定需要映射的 actions   |
 
 #### `fields`
 
 `fields` 有三种形式：
 
-* 数组形式：指定 data 中哪些字段来源于 `store` 。例如 `['numA', 'numB', 'sum']` 。
-* 映射形式：指定 data 中哪些字段来源于 `store` 以及它们在 `store` 中对应的名字。例如 `{ a: 'numA', b: 'numB' }` ，此时 `this.data.a === store.numA` `this.data.b === store.numB` 。
-* 函数形式：指定 data 中每个字段的计算方法。例如 `{ a: () => store.numA, b: () => anotherStore.numB }` ，此时 `this.data.a === store.numA` `this.data.b === anotherStore.numB` 。
+- 数组形式：指定 data 中哪些字段来源于 `store` 。例如 `['numA', 'numB', 'sum']` 。
+- 映射形式：指定 data 中哪些字段来源于 `store` 以及它们在 `store` 中对应的名字。例如 `{ a: 'numA', b: 'numB' }` ，此时 `this.data.a === store.numA` `this.data.b === store.numB` 。
+- 函数形式：指定 data 中每个字段的计算方法。例如 `{ a: () => store.numA, b: () => anotherStore.numB }` ，此时 `this.data.a === store.numA` `this.data.b === anotherStore.numB` 。
 
 上述三种形式中，映射形式和函数形式可以在一个配置中同时使用。
 
@@ -186,8 +187,8 @@ Page({
 
 `actions` 可以用于将 store 中的一些 actions 放入页面或自定义组件的 this 下，来方便触发一些 actions 。有两种形式：
 
-* 数组形式：例如 `['update']` ，此时 `this.update === store.update` 。
-* 映射形式：例如 `{ buttonTap: 'update' }` ，此时 `this.buttonTap === store.update` 。
+- 数组形式：例如 `['update']` ，此时 `this.update === store.update` 。
+- 映射形式：例如 `{ buttonTap: 'update' }` ，此时 `this.buttonTap === store.update` 。
 
 只要 `actions` 不为空，则 `store` 字段必填。
 
@@ -199,8 +200,8 @@ Page({
 
 如果需要立刻更新，可以调用：
 
-* `this.updateStoreBindings()` （在 **behavior 绑定** 中）
-* `this.storeBindings.updateStoreBindings()`  （在 **手工绑定** 中）
+- `this.updateStoreBindings()` （在 **behavior 绑定** 中）
+- `this.storeBindings.updateStoreBindings()` （在 **手工绑定** 中）
 
 ### 与 miniprogram-computed 一起使用
 
@@ -210,7 +211,7 @@ Page({
 Component({
   behaviors: [storeBindingsBehavior, computedBehavior],
   /* ... */
-})
+});
 ```
 
 ### 关于部分更新
@@ -222,19 +223,19 @@ Component({
   behaviors: [storeBindingsBehavior],
   storeBindings: {
     store,
-    fields: ['someObject']
-  }
-})
+    fields: ["someObject"],
+  },
+});
 ```
 
 如果尝试在 `store` 中：
 
 ```js
-this.someObject.someField = 'xxx'
+this.someObject.someField = "xxx";
 ```
 
 这样是不会触发界面更新的。请考虑改成：
 
 ```js
-this.someObject = Object.assign({}, this.someObject, { someField: 'xxx' })
+this.someObject = Object.assign({}, this.someObject, { someField: "xxx" });
 ```
