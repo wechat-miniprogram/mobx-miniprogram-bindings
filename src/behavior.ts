@@ -1,105 +1,12 @@
-import { reaction, comparer, toJS } from "mobx-miniprogram";
+import { IStoreBindings } from "./index";
+import { createActions, createDataFieldsReactions } from "./core";
 
-const createActions = (methods, options) => {
-  const { store, actions } = options;
-  if (!actions) return;
-
-  // for array-typed fields definition
-  if (typeof store === "undefined") {
-    throw new Error("[mobx-miniprogram] no store specified");
-  }
-
-  if (Array.isArray(actions)) {
-    actions.forEach((field) => {
-      methods[field] = (...args) => {
-        return store[field](...args);
-      };
-    });
-  } else if (typeof actions === "object") {
-    Object.keys(actions).forEach((field) => {
-      const def = actions[field];
-      if (typeof field !== "string" && typeof field !== "number") {
-        throw new Error("[mobx-miniprogram] unrecognized field definition");
-      }
-      methods[field] = (...args) => {
-        return store[def](...args);
-      };
-    });
-  }
-};
-const createDataFieldsReactions = (target, options) => {
-  const { store, fields, structuralComparison } = options;
-  // choose equal method
-  const equals = structuralComparison ? comparer.structural : undefined;
-  // setData combination
-  let pendingSetData = null;
-  const applySetData = () => {
-    if (pendingSetData === null) return;
-    const data = pendingSetData;
-    pendingSetData = null;
-    target.setData(data);
-  };
-  const scheduleSetData = (field, value) => {
-    if (!pendingSetData) {
-      pendingSetData = {};
-      wx.nextTick(applySetData);
-    }
-    pendingSetData[field] = toJS(value);
-  };
-  // handling fields
-  let reactions = [];
-  if (Array.isArray(fields)) {
-    // for array-typed fields definition
-    if (typeof store === "undefined") {
-      throw new Error("[mobx-miniprogram] no store specified");
-    }
-    reactions = fields.map((field) => {
-      return reaction(
-        () => store[field],
-        (value) => {
-          scheduleSetData(field, value);
-        },
-        {
-          equals,
-          fireImmediately: true,
-        }
-      );
-    });
-  } else if (typeof fields === "object" && fields) {
-    // for object-typed fields definition
-    reactions = Object.keys(fields).map((field) => {
-      const def = fields[field];
-      if (typeof def === "function") {
-        return reaction(
-          () => def.call(target, store),
-          (value) => {
-            scheduleSetData(field, value);
-          },
-          {
-            equals,
-            fireImmediately: true,
-          }
-        );
-      }
-    });
-  }
-
-  const destroyStoreBindings = () => {
-    reactions.forEach((reaction) => reaction());
-  };
-
-  return {
-    updateStoreBindings: applySetData,
-    destroyStoreBindings,
-  };
-};
-export const createStoreBindings = (target, options) => {
-  createActions(target, options);
-  return createDataFieldsReactions(target, options);
+type TDefFields = WechatMiniprogram.Component.TrivialOption & {
+  storeBindings?: IStoreBindings | Array<IStoreBindings>;
 };
 
 export const behavior = Behavior({
-  definitionFilter: (defFields: any) => {
+  definitionFilter: (defFields: TDefFields) => {
     defFields.methods = defFields.methods || {};
     const { storeBindings } = defFields;
     defFields.methods._mobxMiniprogramBindings = () => {

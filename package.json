@@ -13,8 +13,6 @@
     "README.md"
   ],
   "scripts": {
-    "dev": "gulp dev",
-    "watch": "gulp dev-watch",
     "build": "gulp",
     "gen_dts": "gulp dts",
     "test": "jest ./test/* --bail",
