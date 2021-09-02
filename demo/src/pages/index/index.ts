@@ -4,5 +4,13 @@ Page({
   data: {
     someData: "...",
   },
-  onLoad: function () {},
+  onLoad: function () {
+
+  },
+  onShow() {
+    console.log(this.data)
+  },
+  showdata() {
+    console.log(this.data)
+  }
 });

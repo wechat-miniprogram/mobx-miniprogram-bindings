@@ -1,5 +1,5 @@
 import { ComponentWithStore } from '../../../../src/index'
-import { store } from '../models/store'
+import { global } from '../../models'
 ComponentWithStore({
   options: {
     styleIsolation: 'shared'
@@ -8,7 +8,7 @@ ComponentWithStore({
     someData: '...'
   },
   storeBindings: {
-    store,
+    store: global,
     fields: ["numA", "numB", "sum"],
     actions: {
       buttonTap: "update",

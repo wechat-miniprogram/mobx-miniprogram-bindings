@@ -1,7 +1,16 @@
 <view>Page 中：</view>
-<view class="intro">{{numA}} + {{numB}} = {{sum}}</view>
+<view class="intro">{{global.numA}} + {{global.numB}} = {{global.sum}}</view>
 <view class="intro">
   <button bind:tap="update">update</button>
 </view>
 
-<component />
+<view class="intro">{{numA}} + {{numB}} = {{sum}}</view>
+<view class="intro">
+  <button bind:tap="update_user">update</button>
+</view>
+
+<component-a />
+<component-b />
+
+
+<button bind:tap="showdata">show Page data</button>

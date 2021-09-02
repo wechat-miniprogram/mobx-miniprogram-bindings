@@ -1,0 +1,5 @@
+<view>Component B 中：</view>
+<view class="intro">{{user_store.numA}} + {{user_store.numB}} = {{user_store.sum}}</view>
+<view class="intro">
+  <button bind:tap="buttonTap">update</button>
+</view>

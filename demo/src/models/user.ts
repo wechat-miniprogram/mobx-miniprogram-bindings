@@ -1,15 +1,14 @@
 import { configure, observable, action } from "mobx-miniprogram";
 
-configure({ enforceActions: "observed" });
-export const store = observable({
-  numA: 1,
-  numB: 2,
+export const user = observable({
+  numA: 1000,
+  numB: 1000,
 
   get sum() {
     return this.numA + this.numB;
   },
 
-  update: action(function () {
+  update_user: action(function () {
     const sum = this.sum;
     this.numA = this.numB;
     this.numB = sum;

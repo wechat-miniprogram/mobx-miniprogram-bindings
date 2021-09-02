@@ -1,5 +1,6 @@
 {
   "usingComponents": {
-    "component": "../components/component"
+    "component-a": "../../components/component-a/component",
+    "component-b": "../../components/component-b/component"
   }
 }
