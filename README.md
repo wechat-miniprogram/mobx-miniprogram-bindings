@@ -10,7 +10,7 @@
 
 需要小程序基础库版本 >= 2.2.3 的环境。
 
-也可以直接参考这个代码片段（在微信开发者工具中打开）： [https://developers.weixin.qq.com/s/36j8NZmC74ac](https://developers.weixin.qq.com/s/36j8NZmC74ac) 。
+也可以直接参考这个代码片段（在微信开发者工具中打开）： [https://developers.weixin.qq.com/s/nGvWJ2mL7et0](https://developers.weixin.qq.com/s/nGvWJ2mL7et0) 。
 
 1. 安装 `mobx-miniprogram` 和 `mobx-miniprogram-bindings` ：
 
@@ -99,6 +99,46 @@ Page({
   },
   myMethod() {
     this.data.sum; // 来自于 MobX store 的字段
+  },
+});
+```
+
+## Typescript 支持
+
+从 `2.1.2` 版本开始提供了简单的 `TypeScript` 支持。
+
+新增两个构造器 `API`，推荐优先使用下列新版接口，你也可以继续使用旧版接口，详见接口说明。
+
+### ComponentWithStore
+
+```js
+import { ComponentWithStore } from "mobx-miniprogram-binding";
+ComponentWithStore({
+  options: {
+    styleIsolation: "shared",
+  },
+  data: {
+    someData: "...",
+  },
+  storeBindings: {
+    store,
+    fields: ["numA", "numB", "sum"],
+    actions: {
+      buttonTap: "update",
+    },
+  },
+});
+```
+
+### BehaviorWithStore
+
+```js
+import { BehaviorWithStore } from "mobx-miniprogram-binding";
+export const testBehavior = BehaviorWithStore({
+  storeBindings: {
+    store,
+    fields: ["numA", "numB", "sum"],
+    actions: ["update"],
   },
 });
 ```
