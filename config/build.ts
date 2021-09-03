@@ -40,6 +40,7 @@ const esbuildOptions = {
   bundle: true,
   format: "cjs",
   minify: true, // 开启压缩混淆
+  external: ["mobx-miniprogram"]
 };
 
 export interface BuildConfig {
