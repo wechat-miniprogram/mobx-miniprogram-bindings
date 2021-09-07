@@ -10,12 +10,6 @@ export const createActions = (methods, options: IStoreBindings) => {
     throw new Error("[mobx-miniprogram] no store specified");
   }
 
-  // let namespace = options.namespace || "";
-  // if (namespace && typeof namespace !== "string") {
-  //   throw new Error("[mobx-miniprogram] namespace only expect string");
-  // }
-  // namespace = namespace.replaceAll(" ", "");
-
   if (Array.isArray(actions)) {
     actions.forEach((field) => {
       if (methods[field]) {

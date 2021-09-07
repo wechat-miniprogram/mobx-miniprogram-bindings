@@ -13,3 +13,4 @@ miniprogram_dist
 miniprogram_dev
 node_modules
 coverage
+swc_build
