@@ -40,7 +40,7 @@ export const createDataFieldsReactions = (target, options: IStoreBindings) => {
   if (namespace && typeof namespace !== "string") {
     throw new Error("[mobx-miniprogram] namespace only expect string");
   }
-  namespace = namespace.replaceAll(" ", "");
+  namespace = namespace.replace(new RegExp(" ","gm"),"");
 
   let namespaceData = Object.assign({}, target[namespace]);
 
