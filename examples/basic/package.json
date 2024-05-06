@@ -1,0 +1,31 @@
+{
+  "name": "glass-easel-miniprogram-template",
+  "version": "0.5.1",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "dev": "webpack --config webpack.config.js --watch"
+  },
+  "dependencies": {
+    "glass-easel": "0.5.1",
+    "glass-easel-miniprogram-adapter": "0.5.1",
+    "mobx-miniprogram-bindings": "file:../.."
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "@typescript-eslint/parser": "^6.6.0",
+    "css-loader": "^6.7.1",
+    "eslint": "^7.17.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-promise": "^4.2.1",
+    "glass-easel-miniprogram-webpack-plugin": "0.5.1",
+    "less": "^4.1.3",
+    "less-loader": "^11.0.0",
+    "mini-css-extract-plugin": "^2.6.1",
+    "mobx": "^6.0.0",
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.2.2",
+    "webpack": "^5.85.0",
+    "webpack-cli": "^5.0.1"
+  }
+}

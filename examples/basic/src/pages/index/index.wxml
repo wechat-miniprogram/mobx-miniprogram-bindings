@@ -1,0 +1,2 @@
+<div>{{ numA }} + {{ numB }} = {{ sum }}</view>
+<button bind:tap="buttonTap"> update </button>

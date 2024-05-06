@@ -4,18 +4,16 @@
 
 > 此 behavior 依赖开发者工具的 npm 构建。具体详情可查阅 [官方 npm 文档](https://developers.weixin.qq.com/miniprogram/dev/devtools/npm.html) 。
 
-> 可配合 MobX 的小程序构建版 npm 模块 [`mobx-miniprogram`](https://github.com/wechat-miniprogram/mobx) 使用。
-
 ## 使用方法
 
-需要小程序基础库版本 >= 2.2.3 的环境。
+需要小程序基础库版本 >= 2.11.0 的环境。
 
 也可以直接参考这个代码片段（在微信开发者工具中打开）： [https://developers.weixin.qq.com/s/nGvWJ2mL7et0](https://developers.weixin.qq.com/s/nGvWJ2mL7et0) 。
 
-1. 安装 `mobx-miniprogram` 和 `mobx-miniprogram-bindings` ：
+1. 安装 `mobx` 和 `mobx-miniprogram-bindings` ：
 
 ```shell
-npm install --save mobx-miniprogram mobx-miniprogram-bindings
+npm install --save mobx mobx-miniprogram-bindings
 ```
 
 2. 创建 MobX Store。

@@ -1,4 +1,4 @@
-import { reaction, comparer, toJS } from "mobx-miniprogram";
+import { reaction, comparer, toJS } from "mobx";
 import { IStoreBindings } from "./index";
 
 export const createActions = (methods, options: IStoreBindings) => {
