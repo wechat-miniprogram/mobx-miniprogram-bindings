@@ -1,6 +1,5 @@
 {
-  "name": "glass-easel-miniprogram-template",
-  "version": "0.5.1",
+  "private": true,
   "main": "src/index.ts",
   "scripts": {
     "build": "webpack --config webpack.config.js",
@@ -9,6 +8,7 @@
   "dependencies": {
     "glass-easel": "0.5.1",
     "glass-easel-miniprogram-adapter": "0.5.1",
+    "mobx-miniprogram": "6.3.10-alpha.1",
     "mobx-miniprogram-bindings": "file:../.."
   },
   "devDependencies": {
@@ -22,7 +22,6 @@
     "less": "^4.1.3",
     "less-loader": "^11.0.0",
     "mini-css-extract-plugin": "^2.6.1",
-    "mobx": "^6.0.0",
     "ts-loader": "^9.4.2",
     "typescript": "^5.2.2",
     "webpack": "^5.85.0",

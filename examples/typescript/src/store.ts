@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx"
+import { action, computed, observable } from 'mobx-miniprogram'
 
 class Store {
   @observable accessor numA = 1

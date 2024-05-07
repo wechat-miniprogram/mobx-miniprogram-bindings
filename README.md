@@ -4,16 +4,17 @@
 
 > 此 behavior 依赖开发者工具的 npm 构建。具体详情可查阅 [官方 npm 文档](https://developers.weixin.qq.com/miniprogram/dev/devtools/npm.html) 。
 
+
 ## 使用方法
 
 需要小程序基础库版本 >= 2.11.0 的环境。
 
-也可以直接参考这个代码片段（在微信开发者工具中打开）： [https://developers.weixin.qq.com/s/nGvWJ2mL7et0](https://developers.weixin.qq.com/s/nGvWJ2mL7et0) 。
+具体的示例完整代码，可以参考 [examples](./examples/) 。
 
-1. 安装 `mobx` 和 `mobx-miniprogram-bindings` ：
+1. 安装 `mobx-miniprogram` 和 `mobx-miniprogram-bindings` ：
 
 ```shell
-npm install --save mobx mobx-miniprogram-bindings
+npm install --save mobx-miniprogram mobx-miniprogram-bindings
 ```
 
 2. 创建 MobX Store。
@@ -21,6 +22,9 @@ npm install --save mobx mobx-miniprogram-bindings
 ```js
 // store.js
 import { observable, action } from "mobx-miniprogram";
+
+// 创建 store 时可以采用任何 mobx 的接口风格
+// 这里以传统的 observable 风格为例
 
 export const store = observable({
   // 数据字段
@@ -41,14 +45,14 @@ export const store = observable({
 });
 ```
 
-3. 在 Component 构造器中使用：
+3. 在 Page 或 Component 构造器中使用：
 
 ```js
 import { storeBindingsBehavior } from "mobx-miniprogram-bindings";
 import { store } from "./store";
 
 Component({
-  behaviors: [storeBindingsBehavior],
+  behaviors: [storeBindingsBehavior], // 添加这个 behavior
   data: {
     someData: "...",
   },
@@ -71,46 +75,15 @@ Component({
 });
 ```
 
-4. 在 Page 构造器中使用：
+## TypeScript 接口
 
-如果小程序基础库版本在 2.9.2 以上，可以直接像上面 Component 构造器那样引入 behaviors 。
+在 TypeScript 下，可以使用 `ComponentWithStore` 接口。它会自动处理一些类型问题。
 
-如果需要比较好的兼容性，可以使用下面这种方式（或者直接改用 Component 构造器来创建页面）。
-
-```js
-import { createStoreBindings } from "mobx-miniprogram-bindings";
-import { store } from "./store";
-
-Page({
-  data: {
-    someData: "...",
-  },
-  onLoad() {
-    this.storeBindings = createStoreBindings(this, {
-      store,
-      fields: ["numA", "numB", "sum"],
-      actions: ["update"],
-    });
-  },
-  onUnload() {
-    this.storeBindings.destroyStoreBindings();
-  },
-  myMethod() {
-    this.data.sum; // 来自于 MobX store 的字段
-  },
-});
-```
-
-## Typescript 支持
-
-从 `2.1.2` 版本开始提供了简单的 `TypeScript` 支持。
-
-新增两个构造器 `API`，推荐优先使用下列新版接口，你也可以继续使用旧版接口，详见接口说明。
-
-### ComponentWithStore
+（注意，使用这个接口时，不要在 behaviors 中额外引入 `storeBindingsBehavior` 。）
 
 ```js
 import { ComponentWithStore } from "mobx-miniprogram-binding";
+
 ComponentWithStore({
   options: {
     styleIsolation: "shared",
@@ -128,10 +101,11 @@ ComponentWithStore({
 });
 ```
 
-### BehaviorWithStore
+`BehaviorWithStore` 接口类似。
 
 ```js
 import { BehaviorWithStore } from "mobx-miniprogram-binding";
+
 export const testBehavior = BehaviorWithStore({
   storeBindings: {
     store,
@@ -141,7 +115,8 @@ export const testBehavior = BehaviorWithStore({
 });
 ```
 
-## 接口
+
+## 具体接口说明
 
 将页面、自定义组件和 store 绑定有两种方式： **behavior 绑定** 和 **手工绑定** 。
 
@@ -149,10 +124,9 @@ export const testBehavior = BehaviorWithStore({
 
 **behavior 绑定** 适用于 `Component` 构造器。做法：使用 `storeBindingsBehavior` 这个 behavior 和 `storeBindings` 定义段。
 
-注意：你可以用 `Component` 构造器构造页面， [参考文档](https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/page.html#%E4%BD%BF%E7%94%A8-Component-%E6%9E%84%E9%80%A0%E5%99%A8%E6%9E%84%E9%80%A0%E9%A1%B5%E9%9D%A2) 。
-
 ```js
 import { storeBindingsBehavior } from "mobx-miniprogram-bindings";
+
 Component({
   behaviors: [storeBindingsBehavior],
   storeBindings: {
@@ -165,6 +139,7 @@ Component({
 
 ```js
 import { storeBindingsBehavior } from "mobx-miniprogram-bindings";
+
 Component({
   behaviors: [storeBindingsBehavior],
   storeBindings: [
@@ -180,7 +155,9 @@ Component({
 
 ### 手工绑定
 
-**手工绑定** 适用于全部场景。做法：使用 `createStoreBindings` 创建绑定，它会返回一个包含清理函数的对象用于取消绑定。
+**手工绑定** 更加灵活，适用于 store 需要在 `onLoad` （自定义组件 attached ）时才能确定的情况。
+
+做法：使用 `createStoreBindings` 创建绑定，它会返回一个包含清理函数的对象用于取消绑定。
 
 注意：在页面 onUnload （自定义组件 detached ）时一定要调用清理函数，否则将导致内存泄漏！
 
@@ -198,6 +175,7 @@ Page({
   },
 });
 ```
+
 
 ### 绑定配置
 
@@ -229,6 +207,7 @@ Page({
 - 映射形式：例如 `{ buttonTap: 'update' }` ，此时 `this.buttonTap === store.update` 。
 
 只要 `actions` 不为空，则 `store` 字段必填。
+
 
 ## 注意事项
 

@@ -24,6 +24,7 @@ const swcOptions = {
       mangle: true,
     },
   },
+  sourceMaps: true,
   minify: false,
   module: {
     type: "commonjs",
@@ -40,7 +41,8 @@ const esbuildOptions = {
   bundle: true,
   format: "cjs",
   minify: true, // 开启压缩混淆
-  external: ["mobx-miniprogram"]
+  external: ["mobx-miniprogram"],
+  sourcemap: 'external',
 };
 
 export interface BuildConfig {

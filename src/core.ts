@@ -1,4 +1,4 @@
-import { reaction, comparer, toJS } from "mobx";
+import { reaction, comparer, toJS } from "mobx-miniprogram";
 import { IStoreBindings } from "./index";
 
 export const createActions = (methods, options: IStoreBindings) => {
@@ -64,7 +64,8 @@ export const createDataFieldsReactions = (target, options: IStoreBindings) => {
   const scheduleSetData = (field, value) => {
     if (!pendingSetData) {
       pendingSetData = {};
-      wx.nextTick(applySetData);
+      if (typeof wx !== 'undefined') wx.nextTick(applySetData);
+      else Promise.resolve().then(applySetData);
     }
     if (useNamespace()) {
       namespaceData = {
