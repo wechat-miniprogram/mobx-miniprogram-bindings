@@ -4,9 +4,9 @@ import { store } from '../../store'
 ComponentWithStore({
   storeBindings: {
     store,
-    fields: ["numA", "numB", "sum"],
+    fields: ['numA', 'numB', 'sum'],
     actions: {
-      buttonTap: "update"
+      buttonTap: 'update',
     },
   },
 })

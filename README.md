@@ -4,7 +4,6 @@
 
 > 此 behavior 依赖开发者工具的 npm 构建。具体详情可查阅 [官方 npm 文档](https://developers.weixin.qq.com/miniprogram/dev/devtools/npm.html) 。
 
-
 ## 使用方法
 
 需要小程序基础库版本 >= 2.11.0 的环境。
@@ -21,7 +20,7 @@ npm install --save mobx-miniprogram mobx-miniprogram-bindings
 
 ```js
 // store.js
-import { observable, action } from "mobx-miniprogram";
+import { observable, action } from 'mobx-miniprogram'
 
 // 创建 store 时可以采用任何 mobx 的接口风格
 // 这里以传统的 observable 风格为例
@@ -33,46 +32,46 @@ export const store = observable({
 
   // 计算属性
   get sum() {
-    return this.numA + this.numB;
+    return this.numA + this.numB
   },
 
   // actions
   update: action(function () {
-    const sum = this.sum;
-    this.numA = this.numB;
-    this.numB = sum;
+    const sum = this.sum
+    this.numA = this.numB
+    this.numB = sum
   }),
-});
+})
 ```
 
 3. 在 Page 或 Component 构造器中使用：
 
 ```js
-import { storeBindingsBehavior } from "mobx-miniprogram-bindings";
-import { store } from "./store";
+import { storeBindingsBehavior } from 'mobx-miniprogram-bindings'
+import { store } from './store'
 
 Component({
   behaviors: [storeBindingsBehavior], // 添加这个 behavior
   data: {
-    someData: "...",
+    someData: '...',
   },
   storeBindings: {
     store,
     fields: {
       numA: () => store.numA,
       numB: (store) => store.numB,
-      sum: "sum",
+      sum: 'sum',
     },
     actions: {
-      buttonTap: "update",
+      buttonTap: 'update',
     },
   },
   methods: {
     myMethod() {
-      this.data.sum; // 来自于 MobX store 的字段
+      this.data.sum // 来自于 MobX store 的字段
     },
   },
-});
+})
 ```
 
 ## TypeScript 接口
@@ -82,39 +81,38 @@ Component({
 （注意，使用这个接口时，不要在 behaviors 中额外引入 `storeBindingsBehavior` 。）
 
 ```js
-import { ComponentWithStore } from "mobx-miniprogram-binding";
+import { ComponentWithStore } from 'mobx-miniprogram-binding'
 
 ComponentWithStore({
   options: {
-    styleIsolation: "shared",
+    styleIsolation: 'shared',
   },
   data: {
-    someData: "...",
+    someData: '...',
   },
   storeBindings: {
     store,
-    fields: ["numA", "numB", "sum"],
+    fields: ['numA', 'numB', 'sum'],
     actions: {
-      buttonTap: "update",
+      buttonTap: 'update',
     },
   },
-});
+})
 ```
 
 `BehaviorWithStore` 接口类似。
 
 ```js
-import { BehaviorWithStore } from "mobx-miniprogram-binding";
+import { BehaviorWithStore } from 'mobx-miniprogram-binding'
 
 export const testBehavior = BehaviorWithStore({
   storeBindings: {
     store,
-    fields: ["numA", "numB", "sum"],
-    actions: ["update"],
+    fields: ['numA', 'numB', 'sum'],
+    actions: ['update'],
   },
-});
+})
 ```
-
 
 ## 具体接口说明
 
@@ -125,20 +123,20 @@ export const testBehavior = BehaviorWithStore({
 **behavior 绑定** 适用于 `Component` 构造器。做法：使用 `storeBindingsBehavior` 这个 behavior 和 `storeBindings` 定义段。
 
 ```js
-import { storeBindingsBehavior } from "mobx-miniprogram-bindings";
+import { storeBindingsBehavior } from 'mobx-miniprogram-bindings'
 
 Component({
   behaviors: [storeBindingsBehavior],
   storeBindings: {
     /* 绑定配置（见下文） */
   },
-});
+})
 ```
 
 也可以把 `storeBindings` 设置为一个数组，这样可以同时绑定多个 `store` ：
 
 ```js
-import { storeBindingsBehavior } from "mobx-miniprogram-bindings";
+import { storeBindingsBehavior } from 'mobx-miniprogram-bindings'
 
 Component({
   behaviors: [storeBindingsBehavior],
@@ -150,7 +148,7 @@ Component({
       /* 绑定配置 2 */
     },
   ],
-});
+})
 ```
 
 ### 手工绑定
@@ -162,20 +160,19 @@ Component({
 注意：在页面 onUnload （自定义组件 detached ）时一定要调用清理函数，否则将导致内存泄漏！
 
 ```js
-import { createStoreBindings } from "mobx-miniprogram-bindings";
+import { createStoreBindings } from 'mobx-miniprogram-bindings'
 
 Page({
   onLoad() {
     this.storeBindings = createStoreBindings(this, {
       /* 绑定配置（见下文） */
-    });
+    })
   },
   onUnload() {
-    this.storeBindings.destroyStoreBindings();
+    this.storeBindings.destroyStoreBindings()
   },
-});
+})
 ```
-
 
 ### 绑定配置
 
@@ -208,7 +205,6 @@ Page({
 
 只要 `actions` 不为空，则 `store` 字段必填。
 
-
 ## 注意事项
 
 ### 延迟更新与立刻更新
@@ -228,7 +224,7 @@ Page({
 Component({
   behaviors: [storeBindingsBehavior, computedBehavior],
   /* ... */
-});
+})
 ```
 
 ### 关于部分更新
@@ -240,19 +236,19 @@ Component({
   behaviors: [storeBindingsBehavior],
   storeBindings: {
     store,
-    fields: ["someObject"],
+    fields: ['someObject'],
   },
-});
+})
 ```
 
 如果尝试在 `store` 中：
 
 ```js
-this.someObject.someField = "xxx";
+this.someObject.someField = 'xxx'
 ```
 
 这样是不会触发界面更新的。请考虑改成：
 
 ```js
-this.someObject = Object.assign({}, this.someObject, { someField: "xxx" });
+this.someObject = Object.assign({}, this.someObject, { someField: 'xxx' })
 ```

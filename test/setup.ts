@@ -7,7 +7,9 @@ const compileTemplate = (src: string) => {
   const genObjectSrc = `return ${group.getTmplGenObjectGroups()}`
   group.free()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const genObjectGroupList = new Function(genObjectSrc)() as { [key: string]: any }
+  const genObjectGroupList = new Function(genObjectSrc)() as {
+    [key: string]: any
+  }
   return {
     groupList: genObjectGroupList,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -20,9 +22,13 @@ const setup = () => {
   const codeSpace = env.createCodeSpace('', true)
   const backend = env.associateBackend()
   codeSpace.componentEnv('', (env) => {
-    (globalThis as any).Behavior = env.Behavior
+    ;(globalThis as any).Behavior = env.Behavior
   })
-  globalThis.__defineComponent = (path: string, template: string, f: (Component: adapter.ComponentConstructor, _: any) => void) => {
+  globalThis.__defineComponent = (
+    path: string,
+    template: string,
+    f: (Component: adapter.ComponentConstructor, _: any) => void,
+  ) => {
     const compPath = path || 'TEST'
     codeSpace.addCompiledTemplate(compPath, compileTemplate(template))
     codeSpace.componentEnv(compPath, (env) => {
@@ -31,7 +37,11 @@ const setup = () => {
     const def = codeSpace.getComponentSpace().getComponentByUrl(compPath, '')
     codeSpace.getComponentSpace().setGlobalUsingComponent(compPath, def)
   }
-  globalThis.__renderComponent = (path: string, template: string, f: (Component: adapter.ComponentConstructor, _: any) => void) => {
+  globalThis.__renderComponent = (
+    path: string,
+    template: string,
+    f: (Component: adapter.ComponentConstructor, _: any) => void,
+  ) => {
     const compPath = path || 'TEST'
     codeSpace.addCompiledTemplate(compPath, compileTemplate(template))
     codeSpace.componentEnv(compPath, (env) => {

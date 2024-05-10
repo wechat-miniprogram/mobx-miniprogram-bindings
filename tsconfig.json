@@ -5,10 +5,7 @@
     "noImplicitAny": false,
     "removeComments": true,
     "target": "ESNEXT",
-    "lib": [
-      "ESNEXT",
-      "DOM"
-    ],
+    "lib": ["ESNEXT", "DOM"],
     "preserveConstEnums": true,
     "sourceMap": true,
     "esModuleInterop": true,
@@ -16,9 +13,7 @@
     "declaration": true,
     "declarationDir": "./types",
     "emitDeclarationOnly": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
-  "include": [
-    "./src/**/*.ts"
-  ],
+  "include": ["./src/**/*.ts"]
 }
