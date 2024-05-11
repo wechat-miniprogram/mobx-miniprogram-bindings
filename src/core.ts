@@ -32,7 +32,12 @@ export const createActions = (methods, options: IStoreBindings) => {
   }
 }
 
-export const createDataFieldsReactions = (target, options: IStoreBindings) => {
+export type StoreBindingsManager = {
+  updateStoreBindings: () => void
+  destroyStoreBindings: () => void
+}
+
+export const createDataFieldsReactions = (target, options: Omit<IStoreBindings, "actions">): StoreBindingsManager => {
   const { store, fields, structuralComparison } = options
 
   // if use namespace

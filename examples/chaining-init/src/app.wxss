@@ -1,0 +1,5 @@
+/* this is the global stylesheet */
+
+view {
+  display: block;
+}

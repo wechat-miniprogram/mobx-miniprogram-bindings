@@ -1,5 +1,7 @@
 /// <reference types="wechat-miniprogram" />
 /// <reference types="wechat-miniprogram" />
+import { StoreBindingsManager } from './core';
+import type * as adapter from 'glass-easel-miniprogram-adapter';
 type Action = string;
 type ActionAlias = string;
 type DataKey = string;
@@ -20,9 +22,10 @@ type StoreOptions<TData extends WechatMiniprogram.Component.DataOption, TPropert
 }) & ThisType<ComponentWithStoreInstance<TData, TProperty, TMethod, TCustomInstanceProperty>>;
 export declare function ComponentWithStore<TData extends WechatMiniprogram.Component.DataOption, TProperty extends WechatMiniprogram.Component.PropertyOption, TMethod extends WechatMiniprogram.Component.MethodOption, TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {}>(options: StoreOptions<TData, TProperty, TMethod, TCustomInstanceProperty>): string;
 export declare function BehaviorWithStore<TData extends WechatMiniprogram.Component.DataOption, TProperty extends WechatMiniprogram.Component.PropertyOption, TMethod extends WechatMiniprogram.Component.MethodOption, TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {}>(options: StoreOptions<TData, TProperty, TMethod, TCustomInstanceProperty>): string;
-export declare const createStoreBindings: (target: any, options: any) => {
-    updateStoreBindings: () => void;
-    destroyStoreBindings: () => void;
-};
+export declare const createStoreBindings: (target: any, options: IStoreBindings) => StoreBindingsManager;
 export declare const storeBindingsBehavior: string;
+export type InitializedStoreBindings = {
+    updateStoreBindings: () => void;
+};
+export declare const initStoreBindings: (ctx: adapter.builder.BuilderContext<any, any, any>, options: Omit<IStoreBindings, "actions">) => InitializedStoreBindings;
 export {};

@@ -1,5 +1,6 @@
 import { behavior } from './behavior'
-import { createActions, createDataFieldsReactions } from './core'
+import { StoreBindingsManager, createActions, createDataFieldsReactions } from './core'
+import type * as adapter from 'glass-easel-miniprogram-adapter'
 
 type Action = string
 type ActionAlias = string
@@ -62,9 +63,37 @@ export function BehaviorWithStore<
   return Behavior(options)
 }
 
-export const createStoreBindings = (target, options) => {
+export const createStoreBindings = (target, options: IStoreBindings): StoreBindingsManager => {
   createActions(target, options)
   return createDataFieldsReactions(target, options)
 }
 
 export const storeBindingsBehavior = behavior
+
+export type InitializedStoreBindings = {
+  updateStoreBindings: () => void
+}
+
+export const initStoreBindings = (
+  ctx: adapter.builder.BuilderContext<any, any, any>,
+  options: Omit<IStoreBindings, "actions">,
+): InitializedStoreBindings => {
+  const { self, lifetime } = ctx
+
+  let storeBindings: StoreBindingsManager | undefined
+  lifetime('attached', () => {
+    storeBindings = createDataFieldsReactions(self, options)
+    storeBindings.updateStoreBindings()
+  })
+  lifetime('detached', () => {
+    storeBindings.destroyStoreBindings()
+  })
+
+  return {
+    updateStoreBindings: () => {
+      if (storeBindings) {
+        storeBindings.updateStoreBindings()
+      }
+    }
+  }
+}
