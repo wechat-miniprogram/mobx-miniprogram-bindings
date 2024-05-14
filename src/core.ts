@@ -37,7 +37,10 @@ export type StoreBindingsManager = {
   destroyStoreBindings: () => void
 }
 
-export const createDataFieldsReactions = (target, options: Omit<IStoreBindings, "actions">): StoreBindingsManager => {
+export const createDataFieldsReactions = (
+  target,
+  options: Omit<IStoreBindings, 'actions'>,
+): StoreBindingsManager => {
   const { store, fields, structuralComparison } = options
 
   // if use namespace

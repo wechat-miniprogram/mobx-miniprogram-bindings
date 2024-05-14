@@ -114,6 +114,28 @@ export const testBehavior = BehaviorWithStore({
 })
 ```
 
+## glass-easel Chaining API 接口
+
+使用 glass-easel Chaining API 时，使用 `initStoreBindings` 更友好。
+
+```js
+import { initStoreBindings } from 'mobx-miniprogram-bindings'
+
+Component()
+  .init((ctx) => {
+    const { listener } = ctx
+    initStoreBindings(ctx, {
+      store,
+      fields: ['numA', 'numB', 'sum'],
+    })
+    const buttonTap = listener(() => {
+      store.update()
+    })
+    return { buttonTap }
+  })
+  .register()
+```
+
 ## 具体接口说明
 
 将页面、自定义组件和 store 绑定有两种方式： **behavior 绑定** 和 **手工绑定** 。

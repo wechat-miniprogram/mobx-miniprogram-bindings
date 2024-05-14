@@ -76,7 +76,7 @@ export type InitializedStoreBindings = {
 
 export const initStoreBindings = (
   ctx: adapter.builder.BuilderContext<any, any, any>,
-  options: Omit<IStoreBindings, "actions">,
+  options: Omit<IStoreBindings, 'actions'>,
 ): InitializedStoreBindings => {
   const { self, lifetime } = ctx
 
@@ -94,6 +94,6 @@ export const initStoreBindings = (
       if (storeBindings) {
         storeBindings.updateStoreBindings()
       }
-    }
+    },
   }
 }
