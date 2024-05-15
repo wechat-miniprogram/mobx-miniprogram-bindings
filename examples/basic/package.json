@@ -8,7 +8,7 @@
   "dependencies": {
     "glass-easel": "0.5.2",
     "glass-easel-miniprogram-adapter": "0.5.2",
-    "mobx-miniprogram": "6.3.10-alpha.1",
+    "mobx-miniprogram": "^6.0.0",
     "mobx-miniprogram-bindings": "file:../.."
   },
   "devDependencies": {
