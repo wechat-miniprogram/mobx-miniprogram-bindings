@@ -1,12 +1,12 @@
 module.exports = {
   root: true,
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 9,
     ecmaFeatures: {
       jsx: false,
     },
-    sourceType: "module",
+    sourceType: 'module',
   },
   env: {
     es6: true,
@@ -24,19 +24,19 @@ module.exports = {
     wx: true,
     getCurrentPages: true,
   },
-  plugins: ["@typescript-eslint", "prettier"],
+  plugins: ['@typescript-eslint', 'prettier'],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
-    'prettier/@typescript-eslint'
+    'prettier/@typescript-eslint',
   ],
   rules: {
-    "prettier/prettier": "error",
-    "@typescript-eslint/ban-ts-ignore": "off",
-    "@typescript-eslint/no-empty-function": "off",
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-non-null-assertion": "off",
-  }
-};
+    'prettier/prettier': 'error',
+    '@typescript-eslint/ban-ts-ignore': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
+  },
+}

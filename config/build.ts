@@ -8,13 +8,13 @@
 const swcOptions = {
   jsc: {
     parser: {
-      syntax: "typescript",
+      syntax: 'typescript',
       tsx: false,
       decorators: false,
       dynamicImport: false,
     },
     transform: null,
-    target: "es5",
+    target: 'es5',
     externalHelpers: false,
     keepClassNames: false,
     minify: {
@@ -24,31 +24,33 @@ const swcOptions = {
       mangle: true,
     },
   },
+  sourceMaps: true,
   minify: false,
   module: {
-    type: "commonjs",
+    type: 'commonjs',
     strict: false,
     strictMode: true,
     lazy: false,
     noInterop: false,
   },
-};
+}
 
 // esbuild 配置
 const esbuildOptions = {
-  outfile: "index.js",
+  outfile: 'index.js',
   bundle: true,
-  format: "cjs",
+  format: 'cjs',
   minify: true, // 开启压缩混淆
-  external: ["mobx-miniprogram"]
-};
+  external: ['mobx-miniprogram'],
+  sourcemap: 'external',
+}
 
 export interface BuildConfig {
-  swcOptions: any;
-  esbuildOptions: any;
+  swcOptions: any
+  esbuildOptions: any
 }
 
 export const buildConfig: BuildConfig = {
   swcOptions,
   esbuildOptions,
-};
+}

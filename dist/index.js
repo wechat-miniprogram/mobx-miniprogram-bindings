@@ -1,1 +1,308 @@
-var _=(r,i)=>()=>(i||r((i={exports:{}}).exports,i),i.exports);var y=_(d=>{"use strict";Object.defineProperty(d,"__esModule",{value:!0}),d.createActions=d.createDataFieldsReactions=void 0;var A,x,m=require("mobx-miniprogram");function O(r){if(Array.isArray(r)){for(var i=0,e=new Array(r.length);i<r.length;i++)e[i]=r[i];return e}}function S(r,i,e){return i in r?Object.defineProperty(r,i,{value:e,enumerable:!0,configurable:!0,writable:!0}):r[i]=e,r}function j(r){if(Symbol.iterator in Object(r)||Object.prototype.toString.call(r)==="[object Arguments]")return Array.from(r)}function D(){throw new TypeError("Invalid attempt to spread non-iterable instance")}function F(r){for(var i=1;i<arguments.length;i++){var e=arguments[i]!=null?arguments[i]:{},n=Object.keys(e);typeof Object.getOwnPropertySymbols=="function"&&(n=n.concat(Object.getOwnPropertySymbols(e).filter(function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable}))),n.forEach(function(t){S(r,t,e[t])})}return r}function w(r){return O(r)||j(r)||D()}var q=function(r,i){var e=i.store,n=i.actions;if(n){if(e===void 0)throw new Error("[mobx-miniprogram] no store specified");Array.isArray(n)?n.forEach(function(t){if(r[t])throw new Error("[mobx-miniprogram] multiple action definition");r[t]=function(){for(var a=arguments.length,u=new Array(a),c=0;c<a;c++)u[c]=arguments[c];return(A=e)[t].apply(A,w(u))}}):typeof n=="object"&&Object.keys(n).forEach(function(t){var a=n[t];if(typeof t!="string"&&typeof t!="number")throw new Error("[mobx-miniprogram] unrecognized field definition");r[t]=function(){for(var u=arguments.length,c=new Array(u),s=0;s<u;s++)c[s]=arguments[s];return(x=e)[a].apply(x,w(c))}})}};d.createActions=q;var C=function(r,i){var e=i.store,n=i.fields,t=i.structuralComparison,a=i.namespace||"";if(a&&typeof a!="string")throw new Error("[mobx-miniprogram] namespace only expect string");a=a.replace(/ /gm,"");var u=Object.assign({},r[a]),c=t?m.comparer.structural:void 0,s=null,B=function(){if(s!==null){var o=s;s=null,r.setData(o)}},h=function(o,f){s||(s={},wx.nextTick(B)),a!==""?(u=F({},u,S({},o,m.toJS(f))),s[a]=u):s[o]=m.toJS(f)},l=[];if(Array.isArray(n)){if(e===void 0)throw new Error("[mobx-miniprogram] no store specified");l=n.map(function(o){return m.reaction(function(){return e[o]},function(f){h(o,f)},{equals:c,fireImmediately:!0})})}else typeof n=="object"&&n&&(l=Object.keys(n).map(function(o){var f=n[o];if(typeof f=="function")return m.reaction(function(){return f.call(r,e)},function(b){h(o,b)},{equals:c,fireImmediately:!0});if(typeof o!="string"&&typeof o!="number")throw new Error("[mobx-miniprogram] unrecognized field definition");if(e===void 0)throw new Error("[mobx-miniprogram] no store specified");return m.reaction(function(){return e[f]},function(b){h(String(o),b)},{equals:c,fireImmediately:!0})}));return{updateStoreBindings:B,destroyStoreBindings:function(){l.forEach(function(o){return o()})}}};d.createDataFieldsReactions=C});var M=_(p=>{"use strict";Object.defineProperty(p,"__esModule",{value:!0}),p.behavior=void 0;var g=y(),R=Behavior({definitionFilter:function(r){r.methods=r.methods||{};var i=r.storeBindings;r.methods._mobxMiniprogramBindings=function(){return i},i&&(Array.isArray(i)?i.forEach(function(e){g.createActions(r.methods,e)}):g.createActions(r.methods,i))},lifetimes:{attached:function(){if(typeof this._mobxMiniprogramBindings=="function"){var r=this._mobxMiniprogramBindings();if(!r)return void(this._mobxMiniprogramBindings=null);if(Array.isArray(r)){var i=this;this._mobxMiniprogramBindings=r.map(function(e){var n=g.createDataFieldsReactions(i,e);return n.updateStoreBindings(),n})}else this._mobxMiniprogramBindings=g.createDataFieldsReactions(this,r),this._mobxMiniprogramBindings.updateStoreBindings()}},detached:function(){this._mobxMiniprogramBindings&&(Array.isArray(this._mobxMiniprogramBindings)?this._mobxMiniprogramBindings.forEach(function(r){r.destroyStoreBindings()}):this._mobxMiniprogramBindings.destroyStoreBindings())}},methods:{updateStoreBindings:function(){this._mobxMiniprogramBindings&&typeof this._mobxMiniprogramBindings!="function"&&(Array.isArray(this._mobxMiniprogramBindings)?this._mobxMiniprogramBindings.forEach(function(r){r.updateStoreBindings()}):this._mobxMiniprogramBindings.updateStoreBindings())}}});p.behavior=R});"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.ComponentWithStore=I,exports.BehaviorWithStore=W,exports.createStoreBindings=exports.storeBindingsBehavior=void 0;var v=M(),E=y();function I(r){return Array.isArray(r.behaviors)||(r.behaviors=[]),r.behaviors.unshift(v.behavior),Component(r)}function W(r){return Array.isArray(r.behaviors)||(r.behaviors=[]),r.behaviors.unshift(v.behavior),Behavior(r)}var k=function(r,i){return E.createActions(r,i),E.createDataFieldsReactions(r,i)};exports.createStoreBindings=k;var P=v.behavior;exports.storeBindingsBehavior=P;
+'use strict'
+var P = (r, t) => () => (t || r((t = { exports: {} }).exports, t), t.exports)
+var x = P((j) => {
+  'use strict'
+  Object.defineProperty(j, '__esModule', { value: !0 }),
+    (function (r, t) {
+      for (var e in t) Object.defineProperty(r, e, { enumerable: !0, get: t[e] })
+    })(j, {
+      createActions: function () {
+        return F
+      },
+      createDataFieldsReactions: function () {
+        return I
+      },
+    })
+  var l = require('mobx-miniprogram')
+  function S(r, t) {
+    ;(t == null || t > r.length) && (t = r.length)
+    for (var e = 0, i = Array(t); e < t; e++) i[e] = r[e]
+    return i
+  }
+  function E(r, t, e) {
+    return (
+      t in r
+        ? Object.defineProperty(r, t, { value: e, enumerable: !0, configurable: !0, writable: !0 })
+        : (r[t] = e),
+      r
+    )
+  }
+  function D(r) {
+    return (
+      (function (t) {
+        if (Array.isArray(t)) return S(t)
+      })(r) ||
+      (function (t) {
+        if ((typeof Symbol < 'u' && t[Symbol.iterator] != null) || t['@@iterator'] != null)
+          return Array.from(t)
+      })(r) ||
+      (function (t, e) {
+        if (t) {
+          if (typeof t == 'string') return S(t, void 0)
+          var i = Object.prototype.toString.call(t).slice(8, -1)
+          if (
+            (i === 'Object' && t.constructor && (i = t.constructor.name),
+            i === 'Map' || i === 'Set')
+          )
+            return Array.from(i)
+          if (i === 'Arguments' || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(i))
+            return S(t, void 0)
+        }
+      })(r) ||
+      (function () {
+        throw TypeError(
+          'Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.',
+        )
+      })()
+    )
+  }
+  var F = function (r, t) {
+      var e = t.store,
+        i = t.actions
+      if (i) {
+        if (e === void 0) throw Error('[mobx-miniprogram] no store specified')
+        Array.isArray(i)
+          ? i.forEach(function (o) {
+              if (r[o]) throw Error('[mobx-miniprogram] multiple action definition')
+              r[o] = function () {
+                for (var s = arguments.length, c = Array(s), u = 0; u < s; u++) c[u] = arguments[u]
+                return e[o].apply(e, D(c))
+              }
+            })
+          : typeof i == 'object' &&
+            Object.keys(i).forEach(function (o) {
+              var s = i[o]
+              if (typeof o != 'string' && typeof o != 'number')
+                throw Error('[mobx-miniprogram] unrecognized field definition')
+              r[o] = function () {
+                for (var c = arguments.length, u = Array(c), a = 0; a < c; a++) u[a] = arguments[a]
+                return e[s].apply(e, D(u))
+              }
+            })
+      }
+    },
+    I = function (r, t) {
+      var e = t.store,
+        i = t.fields,
+        o = t.structuralComparison,
+        s = t.namespace || ''
+      if (s && typeof s != 'string') throw Error('[mobx-miniprogram] namespace only expect string')
+      var c = Object.assign({}, r[(s = s.replace(RegExp(' ', 'gm'), ''))]),
+        u = o ? l.comparer.structural : void 0,
+        a = null,
+        B = function () {
+          if (a !== null) {
+            var n = a
+            ;(a = null), r.setData(n)
+          }
+        },
+        O = function (n, f) {
+          if (
+            (a || ((a = {}), typeof wx < 'u' ? wx.nextTick(B) : Promise.resolve().then(B)),
+            s !== '')
+          ) {
+            var m, g
+            ;(m = (function (d) {
+              for (var b = 1; b < arguments.length; b++) {
+                var p = arguments[b] != null ? arguments[b] : {},
+                  y = Object.keys(p)
+                typeof Object.getOwnPropertySymbols == 'function' &&
+                  (y = y.concat(
+                    Object.getOwnPropertySymbols(p).filter(function (h) {
+                      return Object.getOwnPropertyDescriptor(p, h).enumerable
+                    }),
+                  )),
+                  y.forEach(function (h) {
+                    E(d, h, p[h])
+                  })
+              }
+              return d
+            })({}, c)),
+              (g = (g = E({}, n, (0, l.toJS)(f))) != null ? g : {}),
+              Object.getOwnPropertyDescriptors
+                ? Object.defineProperties(m, Object.getOwnPropertyDescriptors(g))
+                : (function (d, b) {
+                    var p = Object.keys(d)
+                    if (Object.getOwnPropertySymbols) {
+                      var y = Object.getOwnPropertySymbols(d)
+                      p.push.apply(p, y)
+                    }
+                    return p
+                  })(Object(g)).forEach(function (d) {
+                    Object.defineProperty(m, d, Object.getOwnPropertyDescriptor(g, d))
+                  }),
+              (c = m),
+              (a[s] = c)
+          } else a[n] = (0, l.toJS)(f)
+        },
+        A = []
+      if (Array.isArray(i)) {
+        if (e === void 0) throw Error('[mobx-miniprogram] no store specified')
+        A = i.map(function (n) {
+          return (0, l.reaction)(
+            function () {
+              return e[n]
+            },
+            function (f) {
+              O(n, f)
+            },
+            { equals: u, fireImmediately: !0 },
+          )
+        })
+      } else
+        typeof i == 'object' &&
+          i &&
+          (A = Object.keys(i).map(function (n) {
+            var f = i[n]
+            if (typeof f == 'function')
+              return (0, l.reaction)(
+                function () {
+                  return f.call(r, e)
+                },
+                function (m) {
+                  O(n, m)
+                },
+                { equals: u, fireImmediately: !0 },
+              )
+            if (typeof n != 'string' && typeof n != 'number')
+              throw Error('[mobx-miniprogram] unrecognized field definition')
+            if (e === void 0) throw Error('[mobx-miniprogram] no store specified')
+            return (0, l.reaction)(
+              function () {
+                return e[f]
+              },
+              function (m) {
+                O(String(n), m)
+              },
+              { equals: u, fireImmediately: !0 },
+            )
+          }))
+      return {
+        updateStoreBindings: B,
+        destroyStoreBindings: function () {
+          A.forEach(function (n) {
+            return n()
+          })
+        },
+      }
+    }
+})
+var q = P((_) => {
+  'use strict'
+  Object.defineProperty(_, '__esModule', { value: !0 }),
+    Object.defineProperty(_, 'behavior', {
+      enumerable: !0,
+      get: function () {
+        return R
+      },
+    })
+  var v = x(),
+    R = Behavior({
+      definitionFilter: function (r) {
+        r.methods = r.methods || {}
+        var t = r.storeBindings
+        ;(r.methods._mobxMiniprogramBindings = function () {
+          return t
+        }),
+          t &&
+            (Array.isArray(t)
+              ? t.forEach(function (e) {
+                  ;(0, v.createActions)(r.methods, e)
+                })
+              : (0, v.createActions)(r.methods, t))
+      },
+      lifetimes: {
+        attached: function () {
+          if (typeof this._mobxMiniprogramBindings == 'function') {
+            var r = this._mobxMiniprogramBindings()
+            if (!r) {
+              this._mobxMiniprogramBindings = null
+              return
+            }
+            if (Array.isArray(r)) {
+              var t = this
+              this._mobxMiniprogramBindings = r.map(function (e) {
+                var i = (0, v.createDataFieldsReactions)(t, e)
+                return i.updateStoreBindings(), i
+              })
+            } else
+              (this._mobxMiniprogramBindings = (0, v.createDataFieldsReactions)(this, r)),
+                this._mobxMiniprogramBindings.updateStoreBindings()
+          }
+        },
+        detached: function () {
+          this._mobxMiniprogramBindings &&
+            (Array.isArray(this._mobxMiniprogramBindings)
+              ? this._mobxMiniprogramBindings.forEach(function (r) {
+                  r.destroyStoreBindings()
+                })
+              : this._mobxMiniprogramBindings.destroyStoreBindings())
+        },
+      },
+      methods: {
+        updateStoreBindings: function () {
+          this._mobxMiniprogramBindings &&
+            typeof this._mobxMiniprogramBindings != 'function' &&
+            (Array.isArray(this._mobxMiniprogramBindings)
+              ? this._mobxMiniprogramBindings.forEach(function (r) {
+                  r.updateStoreBindings()
+                })
+              : this._mobxMiniprogramBindings.updateStoreBindings())
+        },
+      },
+    })
+})
+Object.defineProperty(exports, '__esModule', { value: !0 }),
+  (function (r, t) {
+    for (var e in t) Object.defineProperty(r, e, { enumerable: !0, get: t[e] })
+  })(exports, {
+    BehaviorWithStore: function () {
+      return C
+    },
+    ComponentWithStore: function () {
+      return k
+    },
+    createStoreBindings: function () {
+      return z
+    },
+    initStoreBindings: function () {
+      return T
+    },
+    storeBindingsBehavior: function () {
+      return J
+    },
+  })
+var w = q(),
+  M = x()
+function k(r) {
+  return (
+    Array.isArray(r.behaviors) || (r.behaviors = []), r.behaviors.unshift(w.behavior), Component(r)
+  )
+}
+function C(r) {
+  return (
+    Array.isArray(r.behaviors) || (r.behaviors = []), r.behaviors.unshift(w.behavior), Behavior(r)
+  )
+}
+var z = function (r, t) {
+    return (0, M.createActions)(r, t), (0, M.createDataFieldsReactions)(r, t)
+  },
+  J = w.behavior,
+  T = function (r, t) {
+    var e,
+      i = r.self,
+      o = r.lifetime
+    return (
+      o('attached', function () {
+        ;(e = (0, M.createDataFieldsReactions)(i, t)).updateStoreBindings()
+      }),
+      o('detached', function () {
+        e.destroyStoreBindings()
+      }),
+      {
+        updateStoreBindings: function () {
+          e && e.updateStoreBindings()
+        },
+      }
+    )
+  }
