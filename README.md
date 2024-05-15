@@ -81,7 +81,7 @@ Component({
 （注意，使用这个接口时，不要在 behaviors 中额外引入 `storeBindingsBehavior` 。）
 
 ```js
-import { ComponentWithStore } from 'mobx-miniprogram-binding'
+import { ComponentWithStore } from 'mobx-miniprogram-bindings'
 
 ComponentWithStore({
   options: {
@@ -103,7 +103,7 @@ ComponentWithStore({
 `BehaviorWithStore` 接口类似。
 
 ```js
-import { BehaviorWithStore } from 'mobx-miniprogram-binding'
+import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 
 export const testBehavior = BehaviorWithStore({
   storeBindings: {
