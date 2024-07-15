@@ -114,7 +114,7 @@ test('destroy', async () => {
   const component = renderComponent(undefined, '<custom-comp />', (Component) => {
     Component({
       attached() {
-        this.storeBindings = createStoreBindings(this, {})
+        this.storeBindings = createStoreBindings(this, { store, fields: [], actions: [] })
       },
       detached() {
         this.storeBindings.destroyStoreBindings()
