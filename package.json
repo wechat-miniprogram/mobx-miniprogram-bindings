@@ -1,6 +1,6 @@
 {
   "name": "mobx-miniprogram-bindings",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Mobx binding utils for WeChat miniprogram",
   "main": "dist/index.js",
   "types": "types/index.d.ts",

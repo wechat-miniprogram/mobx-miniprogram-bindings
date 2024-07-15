@@ -4,4 +4,4 @@ export type StoreBindingsManager = {
     updateStoreBindings: () => void;
     destroyStoreBindings: () => void;
 };
-export declare const createDataFieldsReactions: (target: any, options: Omit<IStoreBindings, 'actions'>) => StoreBindingsManager;
+export declare const createDataFieldsReactions: (target: any, options: Omit<IStoreBindings, "actions">) => StoreBindingsManager;

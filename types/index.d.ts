@@ -1,5 +1,3 @@
-/// <reference types="wechat-miniprogram" />
-/// <reference types="wechat-miniprogram" />
 import { StoreBindingsManager } from './core';
 import type * as adapter from 'glass-easel-miniprogram-adapter';
 type Action = string;
@@ -27,5 +25,5 @@ export declare const storeBindingsBehavior: string;
 export type InitializedStoreBindings = {
     updateStoreBindings: () => void;
 };
-export declare const initStoreBindings: (ctx: adapter.builder.BuilderContext<any, any, any>, options: Omit<IStoreBindings, 'actions'>) => InitializedStoreBindings;
+export declare const initStoreBindings: (ctx: adapter.builder.BuilderContext<any, any, any>, options: Omit<IStoreBindings, "actions">) => InitializedStoreBindings;
 export {};
