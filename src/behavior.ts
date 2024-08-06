@@ -1,3 +1,4 @@
+import 'miniprogram-api-typings'
 import { IStoreBindings } from './index'
 import { createActions, createDataFieldsReactions } from './core'
 

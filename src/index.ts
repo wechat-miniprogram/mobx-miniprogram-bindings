@@ -1,3 +1,4 @@
+import 'miniprogram-api-typings'
 import { behavior } from './behavior'
 import { StoreBindingsManager, createActions, createDataFieldsReactions } from './core'
 import type * as adapter from 'glass-easel-miniprogram-adapter'
