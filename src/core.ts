@@ -1,7 +1,7 @@
 import { reaction, comparer, toJS } from 'mobx-miniprogram'
 import { IStoreBindings } from './index'
 
-export const createActions = (methods, options: IStoreBindings) => {
+export const createActions = <TStore extends Record<string, any>>(methods, options: IStoreBindings<TStore>) => {
   const { store, actions } = options
   if (!actions) return
 
@@ -16,7 +16,7 @@ export const createActions = (methods, options: IStoreBindings) => {
         throw new Error('[mobx-miniprogram] multiple action definition')
       }
       methods[field] = (...args) => {
-        return store[field](...args)
+        return (store[field] as (...args: unknown[]) => unknown)(...args)
       }
     })
   } else if (typeof actions === 'object') {
@@ -26,7 +26,7 @@ export const createActions = (methods, options: IStoreBindings) => {
         throw new Error('[mobx-miniprogram] unrecognized field definition')
       }
       methods[field] = (...args) => {
-        return store[def](...args)
+        return (store[def] as (...args: unknown[]) => unknown)(...args)
       }
     })
   }
@@ -37,9 +37,9 @@ export type StoreBindingsManager = {
   destroyStoreBindings: () => void
 }
 
-export const createDataFieldsReactions = (
+export const createDataFieldsReactions = <TStore extends Record<string, any>>(
   target,
-  options: Omit<IStoreBindings, 'actions'>,
+  options: Omit<IStoreBindings<TStore>, 'actions'>,
 ): StoreBindingsManager => {
   const { store, fields, structuralComparison } = options
 
@@ -60,7 +60,7 @@ export const createDataFieldsReactions = (
   const equals = structuralComparison ? comparer.structural : undefined
 
   // setData combination
-  let pendingSetData = null
+  let pendingSetData: Record<string, any> | null = null
 
   const applySetData = () => {
     if (pendingSetData === null) return
@@ -87,7 +87,7 @@ export const createDataFieldsReactions = (
   }
 
   // handling fields
-  let reactions = []
+  let reactions: (() => void)[] = []
 
   if (Array.isArray(fields)) {
     // for array-typed fields definition

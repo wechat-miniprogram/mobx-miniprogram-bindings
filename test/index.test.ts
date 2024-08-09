@@ -1,7 +1,7 @@
 import * as adapter from 'glass-easel-miniprogram-adapter'
-import { configure, observable, action } from 'mobx-miniprogram'
+import { configure, observable, action, makeAutoObservable } from 'mobx-miniprogram'
 import { behavior as computedBehavior } from 'miniprogram-computed'
-import { createStoreBindings, storeBindingsBehavior } from '../src'
+import { ComponentWithStore, createStoreBindings, storeBindingsBehavior } from '../src'
 import { defineComponent, renderComponent, waitTick } from './env'
 
 // 不允许在动作外部修改状态
@@ -12,22 +12,23 @@ const innerHTML = (component: adapter.component.GeneralComponent) => {
 }
 
 test('manually creation', async () => {
-  const store = observable({
+  const store = makeAutoObservable({
     numA: 1,
     numB: 2,
     get sum() {
       return this.numA + this.numB
     },
-    update: action(function () {
+    update: function () {
       const sum = this.sum
       this.numA = this.numB
       this.numB = sum
-    }),
+    },
   })
 
   const component = renderComponent(undefined, '<view>{{a}}+{{b}}={{c}}</view>', (Component) => {
     Component({
       attached() {
+        // @ts-ignore
         this.storeBindings = createStoreBindings(this, {
           store,
           fields: {
@@ -39,6 +40,7 @@ test('manually creation', async () => {
         })
       },
       detached() {
+        // @ts-ignore
         this.storeBindings.destroyStoreBindings()
       },
     })
@@ -52,17 +54,17 @@ test('manually creation', async () => {
 })
 
 test('declarative creation', async () => {
-  const store = observable({
+  const store = makeAutoObservable({
     numA: 1,
     numB: 2,
     get sum() {
       return this.numA + this.numB
     },
-    update: action(function () {
+    update: function () {
       const sum = this.sum
       this.numA = this.numB
       this.numB = sum
-    }),
+    },
   })
 
   const component = renderComponent(
@@ -88,17 +90,17 @@ test('declarative creation', async () => {
 })
 
 test('destroy', async () => {
-  const store = observable({
+  const store = makeAutoObservable({
     numA: 1,
     numB: 2,
     get sum() {
       return this.numA + this.numB
     },
-    update: action(function () {
+    update: function () {
       const sum = this.sum
       this.numA = this.numB
       this.numB = sum
-    }),
+    },
   })
 
   defineComponent('custom-comp', '<view>{{numA}}+{{numB}}={{sum}}</view>', (Component) => {
@@ -114,9 +116,11 @@ test('destroy', async () => {
   const component = renderComponent(undefined, '<custom-comp />', (Component) => {
     Component({
       attached() {
+        // @ts-ignore
         this.storeBindings = createStoreBindings(this, { store, fields: [], actions: [] })
       },
       detached() {
+        // @ts-ignore
         this.storeBindings.destroyStoreBindings()
       },
     })
@@ -134,17 +138,17 @@ test('destroy', async () => {
 })
 
 test('function-typed fields binding', async () => {
-  const store = observable({
+  const store = makeAutoObservable({
     numA: 1,
     numB: 2,
     get sum() {
       return this.numA + this.numB
     },
-    update: action(function () {
+    update: function () {
       const sum = this.sum
       this.numA = this.numB
       this.numB = sum
-    }),
+    },
   })
 
   const component = renderComponent(undefined, '<view>{{a}}+{{b}}={{s}}</view>', (Component) => {
@@ -168,28 +172,28 @@ test('function-typed fields binding', async () => {
 })
 
 test('binding multi store in custom components', async () => {
-  const storeA = observable({
+  const storeA = makeAutoObservable({
     a_A: 1,
     b_A: 2,
     get sum_A() {
       return this.a_A + this.b_A
     },
-    update: action(function () {
+    update: function () {
       this.a_A = this.a_A * 10
       this.b_A = this.b_A * 10
-    }),
+    },
   })
 
-  const storeB = observable({
+  const storeB = makeAutoObservable({
     a_B: 1,
     b_B: 2,
     get sum_B() {
       return this.a_B + this.b_B
     },
-    update: action(function () {
+    update: function () {
       this.a_B = this.a_B * 20
       this.b_B = this.b_B * 20
-    }),
+    },
   })
 
   const component = renderComponent(
@@ -223,17 +227,17 @@ test('binding multi store in custom components', async () => {
 })
 
 test('structural comparison', async () => {
-  const store = observable({
+  const store = makeAutoObservable({
     nums: {
       a: 1,
       b: 2,
     },
-    update: action(function () {
+    update: function () {
       this.nums = {
         a: this.nums.b,
         b: this.nums.a + this.nums.b,
       }
-    }),
+    },
   })
 
   const component = renderComponent(
@@ -260,11 +264,11 @@ test('structural comparison', async () => {
 })
 
 test('cooperate with miniprogram-computed', async () => {
-  const store = observable({
+  const store = makeAutoObservable({
     nums: [1, 2, 3],
-    update: action(function () {
+    update: function () {
       this.nums = this.nums.concat(this.nums.length + 1)
-    }),
+    },
   })
 
   const component = renderComponent(undefined, '<view>{{sum}}</view>', (Component) => {
@@ -290,4 +294,40 @@ test('cooperate with miniprogram-computed', async () => {
   component.update()
   await waitTick()
   expect(innerHTML(component)).toBe('<view>10</view>')
+})
+
+test('component with store constructor', async () => {
+  const store = makeAutoObservable({
+    numA: 1,
+    numB: 2,
+    get sum() {
+      return this.numA + this.numB
+    },
+    update: function () {
+      const sum = this.sum
+      this.numA = this.numB
+      this.numB = sum
+    },
+  })
+
+  const component = renderComponent(undefined, '<view>{{sum}}</view>', (Component) => {
+    ;(globalThis as any).Component = Component
+    ComponentWithStore({
+      storeBindings: {
+        store,
+        fields: ['sum'],
+        actions: ['update'],
+      },
+      created() {
+        this.update()
+      },
+    } as any)
+    ;(globalThis as any).Component = undefined
+  }) as any
+  await waitTick()
+  expect(innerHTML(component)).toBe('<view>5</view>')
+
+  component.update()
+  await waitTick()
+  expect(innerHTML(component)).toBe('<view>8</view>')
 })

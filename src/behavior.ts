@@ -1,9 +1,19 @@
 import 'miniprogram-api-typings'
 import { IStoreBindings } from './index'
-import { createActions, createDataFieldsReactions } from './core'
+import { createActions, createDataFieldsReactions, StoreBindingsManager } from './core'
 
 type TDefFields = WechatMiniprogram.Component.TrivialOption & {
-  storeBindings?: IStoreBindings | Array<IStoreBindings>
+  storeBindings?: IStoreBindings<any> | Array<IStoreBindings<any>>
+}
+
+type UninitializedThis = {
+  updateStoreBindings: () => void
+  _mobxMiniprogramBindings: (() => IStoreBindings<any>) | StoreBindingsManager | StoreBindingsManager[] | null
+}
+
+type InitializedThis = {
+  updateStoreBindings: () => void
+  _mobxMiniprogramBindings: StoreBindingsManager | StoreBindingsManager[] | null
 }
 
 export const behavior = Behavior({
@@ -25,45 +35,47 @@ export const behavior = Behavior({
   },
   lifetimes: {
     attached() {
-      if (typeof this._mobxMiniprogramBindings !== 'function') return
-      const storeBindings = this._mobxMiniprogramBindings()
+      const self = this as unknown as UninitializedThis
+      if (typeof self._mobxMiniprogramBindings !== 'function') return
+      const storeBindings = self._mobxMiniprogramBindings()
       if (!storeBindings) {
-        this._mobxMiniprogramBindings = null
+        self._mobxMiniprogramBindings = null
         return
       }
       if (Array.isArray(storeBindings)) {
-        const that = this
-        this._mobxMiniprogramBindings = storeBindings.map((item) => {
-          const ret = createDataFieldsReactions(that, item)
+        self._mobxMiniprogramBindings = storeBindings.map((item) => {
+          const ret = createDataFieldsReactions(self, item)
           ret.updateStoreBindings()
           return ret
         })
       } else {
-        this._mobxMiniprogramBindings = createDataFieldsReactions(this, storeBindings)
-        this._mobxMiniprogramBindings.updateStoreBindings()
+        self._mobxMiniprogramBindings = createDataFieldsReactions(this, storeBindings)
+        self._mobxMiniprogramBindings.updateStoreBindings()
       }
     },
     detached() {
-      if (this._mobxMiniprogramBindings) {
-        if (Array.isArray(this._mobxMiniprogramBindings)) {
-          this._mobxMiniprogramBindings.forEach((item) => {
+      const self = this as unknown as InitializedThis
+      if (self._mobxMiniprogramBindings) {
+        if (Array.isArray(self._mobxMiniprogramBindings)) {
+          self._mobxMiniprogramBindings.forEach((item) => {
             item.destroyStoreBindings()
           })
         } else {
-          this._mobxMiniprogramBindings.destroyStoreBindings()
+          self._mobxMiniprogramBindings.destroyStoreBindings()
         }
       }
     },
   },
   methods: {
     updateStoreBindings() {
-      if (this._mobxMiniprogramBindings && typeof this._mobxMiniprogramBindings !== 'function') {
-        if (Array.isArray(this._mobxMiniprogramBindings)) {
-          this._mobxMiniprogramBindings.forEach((item) => {
+      const self = this as unknown as UninitializedThis
+      if (self._mobxMiniprogramBindings && typeof self._mobxMiniprogramBindings !== 'function') {
+        if (Array.isArray(self._mobxMiniprogramBindings)) {
+          self._mobxMiniprogramBindings.forEach((item) => {
             item.updateStoreBindings()
           })
         } else {
-          this._mobxMiniprogramBindings.updateStoreBindings()
+          self._mobxMiniprogramBindings.updateStoreBindings()
         }
       }
     },

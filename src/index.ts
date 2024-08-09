@@ -7,13 +7,19 @@ type Action = string
 type ActionAlias = string
 type DataKey = string
 
-export interface IStoreBindings {
+export interface IStoreBindings<T extends Record<string, any>> {
   namespace?: string
-  store: any
-  fields: Array<DataKey> | Record<DataKey, any | ((store: any) => any)>
-  actions: Record<ActionAlias, Action> | Array<Action>
+  store: T
+  fields: (keyof T)[] | { [k: string]: (keyof T | ((...args: any[]) => any)) }
+  actions: (keyof T)[] | { [k: Action]: keyof T }
   structuralComparison?: boolean
 }
+
+type StoreAction<TStore extends Record<string, any>, T extends IStoreBindings<TStore>> = T['actions'] extends string[]
+  ? { [k in T['actions'][number]]: TStore[k] }
+  : T['actions'] extends { [k: Action]: string }
+  ? { [k in keyof T['actions']]: TStore[T['actions'][k]] }
+  : unknown
 
 type ComponentWithStoreInstance<
   D extends WechatMiniprogram.Component.DataOption,
@@ -25,6 +31,8 @@ type ComponentWithStoreInstance<
 }
 
 type StoreOptions<
+  TStore extends Record<string, any>,
+  TStoreBindings extends IStoreBindings<TStore>,
   TData extends WechatMiniprogram.Component.DataOption,
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
@@ -34,16 +42,18 @@ type StoreOptions<
   Partial<WechatMiniprogram.Component.Method<TMethod>> &
   Partial<WechatMiniprogram.Component.OtherOption> &
   Partial<WechatMiniprogram.Component.Lifetimes> & {
-    storeBindings?: IStoreBindings | Array<IStoreBindings>
+    storeBindings: TStoreBindings
   }) &
   ThisType<ComponentWithStoreInstance<TData, TProperty, TMethod, TCustomInstanceProperty>>
 
 export function ComponentWithStore<
+  TStore extends Record<string, any>,
+  TStoreBindings extends IStoreBindings<TStore>,
   TData extends WechatMiniprogram.Component.DataOption,
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreOptions<TData, TProperty, TMethod, TCustomInstanceProperty>): string {
+>(options: StoreOptions<TStore, TStoreBindings, TData, TProperty, TMethod, TCustomInstanceProperty>): string {
   if (!Array.isArray(options.behaviors)) {
     options.behaviors = []
   }
@@ -52,11 +62,13 @@ export function ComponentWithStore<
 }
 
 export function BehaviorWithStore<
+  TStore extends Record<string, any>,
+  TStoreBindings extends IStoreBindings<TStore>,
   TData extends WechatMiniprogram.Component.DataOption,
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreOptions<TData, TProperty, TMethod, TCustomInstanceProperty>): string {
+>(options: StoreOptions<TStore, TStoreBindings, TData, TProperty, TMethod, TCustomInstanceProperty>): string {
   if (!Array.isArray(options.behaviors)) {
     options.behaviors = []
   }
@@ -64,7 +76,7 @@ export function BehaviorWithStore<
   return Behavior(options)
 }
 
-export const createStoreBindings = (target, options: IStoreBindings): StoreBindingsManager => {
+export const createStoreBindings = <TStore extends Record<string, any>>(target, options: IStoreBindings<TStore>): StoreBindingsManager => {
   createActions(target, options)
   return createDataFieldsReactions(target, options)
 }
@@ -75,9 +87,9 @@ export type InitializedStoreBindings = {
   updateStoreBindings: () => void
 }
 
-export const initStoreBindings = (
+export const initStoreBindings = <TStore extends Record<string, any>>(
   ctx: adapter.builder.BuilderContext<any, any, any>,
-  options: Omit<IStoreBindings, 'actions'>,
+  options: Omit<IStoreBindings<TStore>, 'actions'>,
 ): InitializedStoreBindings => {
   const { self, lifetime } = ctx
 
@@ -87,7 +99,7 @@ export const initStoreBindings = (
     storeBindings.updateStoreBindings()
   })
   lifetime('detached', () => {
-    storeBindings.destroyStoreBindings()
+    storeBindings!.destroyStoreBindings()
   })
 
   return {
