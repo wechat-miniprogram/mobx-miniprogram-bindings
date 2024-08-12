@@ -4,8 +4,6 @@ import { StoreBindingsManager, createActions, createDataFieldsReactions } from '
 import type * as adapter from 'glass-easel-miniprogram-adapter'
 
 type Action = string
-type ActionAlias = string
-type DataKey = string
 
 export interface IStoreBindings<T extends Record<string, any>> {
   namespace?: string
