@@ -10,29 +10,31 @@ type DataKey = string
 export interface IStoreBindings<T extends Record<string, any>> {
   namespace?: string
   store: T
-  fields: (keyof T)[] | { [k: string]: (keyof T | ((...args: any[]) => any)) }
+  fields: (keyof T)[] | { [k: string]: (keyof T | ((...args: any) => any)) }
   actions: (keyof T)[] | { [k: Action]: keyof T }
   structuralComparison?: boolean
 }
 
-type StoreAction<TStore extends Record<string, any>, T extends IStoreBindings<TStore>> = T['actions'] extends string[]
-  ? { [k in T['actions'][number]]: TStore[k] }
-  : T['actions'] extends { [k: Action]: string }
-  ? { [k in keyof T['actions']]: TStore[T['actions'][k]] }
+type StoreData<T extends IStoreBindings<any>> = T['fields'] extends string[]
+  ? { [k in T['fields'][number]]: T['store'][k] }
+  : T['fields'] extends { [k: Action]: string | ((...args: any) => any) }
+  ? { [k in keyof T['fields']]: (
+    T['fields'][k] extends (...args: any) => any
+      ? ReturnType<T['fields'][k]>
+      : T['fields'][k] extends string
+      ? T['store'][T['fields'][k]]
+      : unknown
+  )}
   : unknown
 
-type ComponentWithStoreInstance<
-  D extends WechatMiniprogram.Component.DataOption,
-  P extends WechatMiniprogram.Component.PropertyOption,
-  M extends WechatMiniprogram.Component.MethodOption,
-  CP extends WechatMiniprogram.IAnyObject = Record<string, never>,
-> = WechatMiniprogram.Component.Instance<D, P, M, CP> & {
-  data: { [K in keyof P]: any }
-}
+type StoreAction<T extends IStoreBindings<any>> = T['actions'] extends string[]
+  ? { [k in T['actions'][number]]: T['store'][k] }
+  : T['actions'] extends { [k: Action]: string }
+  ? { [k in keyof T['actions']]: T['store'][T['actions'][k]] }
+  : unknown
 
 type StoreOptions<
-  TStore extends Record<string, any>,
-  TStoreBindings extends IStoreBindings<TStore>,
+  TStoreBindings extends IStoreBindings<any>,
   TData extends WechatMiniprogram.Component.DataOption,
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
@@ -44,16 +46,22 @@ type StoreOptions<
   Partial<WechatMiniprogram.Component.Lifetimes> & {
     storeBindings: TStoreBindings
   }) &
-  ThisType<ComponentWithStoreInstance<TData, TProperty, TMethod, TCustomInstanceProperty>>
+  ThisType<
+    WechatMiniprogram.Component.Instance<
+      TData & StoreData<TStoreBindings>,
+      TProperty,
+      TMethod & StoreAction<TStoreBindings>,
+      TCustomInstanceProperty
+    >
+  >
 
 export function ComponentWithStore<
-  TStore extends Record<string, any>,
-  TStoreBindings extends IStoreBindings<TStore>,
+  TStoreBindings extends IStoreBindings<any>,
   TData extends WechatMiniprogram.Component.DataOption,
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreOptions<TStore, TStoreBindings, TData, TProperty, TMethod, TCustomInstanceProperty>): string {
+>(options: StoreOptions<TStoreBindings, TData, TProperty, TMethod, TCustomInstanceProperty>): string {
   if (!Array.isArray(options.behaviors)) {
     options.behaviors = []
   }
@@ -68,7 +76,7 @@ export function BehaviorWithStore<
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreOptions<TStore, TStoreBindings, TData, TProperty, TMethod, TCustomInstanceProperty>): string {
+>(options: StoreOptions<TStoreBindings, TData, TProperty, TMethod, TCustomInstanceProperty>): string {
   if (!Array.isArray(options.behaviors)) {
     options.behaviors = []
   }
