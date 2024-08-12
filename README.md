@@ -76,26 +76,25 @@ Component({
 
 ## TypeScript 接口
 
-在 TypeScript 下，可以使用 `ComponentWithStore` 接口。它会自动处理一些类型问题。
+在 TypeScript 下，可以使用 `ComponentWithStore` 接口。它会自动处理一些类型问题。注意：
 
-（注意，使用这个接口时，不要在 behaviors 中额外引入 `storeBindingsBehavior` 。）
+* 使用这个接口时，不要在 behaviors 中额外引入 `storeBindingsBehavior` ；
+* `fields` 和 `actions` 末尾需要加上 `as const` 以便更好的类型推导；
+* `storeBindings` 如果是一个数组，也要在数组后加上 `as const` 。
 
 ```js
 import { ComponentWithStore } from 'mobx-miniprogram-bindings'
 
 ComponentWithStore({
-  options: {
-    styleIsolation: 'shared',
-  },
   data: {
     someData: '...',
   },
   storeBindings: {
     store,
-    fields: ['numA', 'numB', 'sum'],
+    fields: ['numA', 'numB', 'sum'] as const,
     actions: {
       buttonTap: 'update',
-    },
+    } as const,
   },
 })
 ```
@@ -108,8 +107,8 @@ import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 export const testBehavior = BehaviorWithStore({
   storeBindings: {
     store,
-    fields: ['numA', 'numB', 'sum'],
-    actions: ['update'],
+    fields: ['numA', 'numB', 'sum'] as const,
+    actions: ['update'] as const,
   },
 })
 ```
