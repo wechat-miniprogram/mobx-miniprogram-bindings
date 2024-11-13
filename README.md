@@ -113,6 +113,9 @@ export const testBehavior = BehaviorWithStore({
 })
 ```
 
+目前 TypeScript 接口定义依赖于 `miniprogram-api-typings ^4.0.0` 。
+（如使用老版本的 api-typings ，请使用本项目的 v4 或 v3 版本。）
+
 ## glass-easel Chaining API 接口
 
 使用 glass-easel Chaining API 时，使用 `initStoreBindings` 更友好。

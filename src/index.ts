@@ -36,10 +36,12 @@ type StoreOptions<
   TData extends WechatMiniprogram.Component.DataOption,
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
+  TBehavior extends WechatMiniprogram.Component.BehaviorOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
 > = (Partial<WechatMiniprogram.Component.Data<TData>> &
   Partial<WechatMiniprogram.Component.Property<TProperty>> &
   Partial<WechatMiniprogram.Component.Method<TMethod>> &
+  Partial<WechatMiniprogram.Component.Behavior<TBehavior>> &
   Partial<WechatMiniprogram.Component.OtherOption> &
   Partial<WechatMiniprogram.Component.Lifetimes> & {
     storeBindings: TStoreBindings
@@ -49,6 +51,7 @@ type StoreOptions<
       TData & StoreData<TStoreBindings>,
       TProperty,
       TMethod & StoreAction<TStoreBindings>,
+      TBehavior,
       TCustomInstanceProperty
     >
   >
@@ -58,10 +61,12 @@ type StoreListOptions<
   TData extends WechatMiniprogram.Component.DataOption,
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
+  TBehavior extends WechatMiniprogram.Component.BehaviorOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
 > = (Partial<WechatMiniprogram.Component.Data<TData>> &
   Partial<WechatMiniprogram.Component.Property<TProperty>> &
   Partial<WechatMiniprogram.Component.Method<TMethod>> &
+  Partial<WechatMiniprogram.Component.Behavior<TBehavior>> &
   Partial<WechatMiniprogram.Component.OtherOption> &
   Partial<WechatMiniprogram.Component.Lifetimes> & {
     storeBindings: TStoreBindings
@@ -87,6 +92,7 @@ type StoreListOptions<
         & StoreAction<TStoreBindings[5]>
         & StoreAction<TStoreBindings[6]>
         & StoreAction<TStoreBindings[7]>,
+      TBehavior,
       TCustomInstanceProperty
     >
   >
@@ -96,26 +102,29 @@ export function ComponentWithStore<
   TData extends WechatMiniprogram.Component.DataOption,
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
+  TBehavior extends WechatMiniprogram.Component.BehaviorOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreOptions<TStoreBindings, TData, TProperty, TMethod, TCustomInstanceProperty>): string;
+>(options: StoreOptions<TStoreBindings, TData, TProperty, TMethod, TBehavior, TCustomInstanceProperty>): string;
 export function ComponentWithStore<
   TStoreBindings extends IStoreBindings<any>[],
   TData extends WechatMiniprogram.Component.DataOption,
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
+  TBehavior extends WechatMiniprogram.Component.BehaviorOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreListOptions<TStoreBindings, TData, TProperty, TMethod, TCustomInstanceProperty>): string;
+>(options: StoreListOptions<TStoreBindings, TData, TProperty, TMethod, TBehavior, TCustomInstanceProperty>): string;
 export function ComponentWithStore<
   TStoreBindings extends any,
   TData extends WechatMiniprogram.Component.DataOption,
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
+  TBehavior extends WechatMiniprogram.Component.BehaviorOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreListOptions<any, TData, TProperty, TMethod, TCustomInstanceProperty>): string {
+>(options: StoreListOptions<any, TData, TProperty, TMethod, TBehavior, TCustomInstanceProperty>): string {
   if (!Array.isArray(options.behaviors)) {
-    options.behaviors = []
+    options.behaviors = [] as any
   }
-  options.behaviors.unshift(behavior)
+  (options.behaviors as any).unshift(behavior)
   return Component(options)
 }
 
@@ -124,26 +133,29 @@ export function BehaviorWithStore<
   TData extends WechatMiniprogram.Component.DataOption,
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
+  TBehavior extends WechatMiniprogram.Component.BehaviorOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreOptions<TStoreBindings, TData, TProperty, TMethod, TCustomInstanceProperty>): string;
+>(options: StoreOptions<TStoreBindings, TData, TProperty, TMethod, TBehavior, TCustomInstanceProperty>): string;
 export function BehaviorWithStore<
   TStoreBindings extends IStoreBindings<any>[],
   TData extends WechatMiniprogram.Component.DataOption,
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
+  TBehavior extends WechatMiniprogram.Component.BehaviorOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreListOptions<TStoreBindings, TData, TProperty, TMethod, TCustomInstanceProperty>): string;
+>(options: StoreListOptions<TStoreBindings, TData, TProperty, TMethod, TBehavior, TCustomInstanceProperty>): string;
 export function BehaviorWithStore<
   TStoreBindings extends any,
   TData extends WechatMiniprogram.Component.DataOption,
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
+  TBehavior extends WechatMiniprogram.Component.BehaviorOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreOptions<any, TData, TProperty, TMethod, TCustomInstanceProperty>): string {
+>(options: StoreListOptions<any, TData, TProperty, TMethod, TBehavior, TCustomInstanceProperty>): string {
   if (!Array.isArray(options.behaviors)) {
-    options.behaviors = []
+    options.behaviors = [] as any
   }
-  options.behaviors.unshift(behavior)
+  (options.behaviors as any).unshift(behavior)
   return Behavior(options)
 }
 

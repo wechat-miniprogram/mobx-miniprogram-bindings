@@ -1,6 +1,6 @@
 {
   "name": "mobx-miniprogram-bindings",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "description": "Mobx binding utils for WeChat miniprogram",
   "main": "dist/index.js",
   "types": "types/src/index.d.ts",
@@ -63,7 +63,7 @@
     "husky": "^9.0.11",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
-    "miniprogram-api-typings": "^3.12.2",
+    "miniprogram-api-typings": "^4.0.1",
     "miniprogram-computed": "^4.4.0",
     "mobx-miniprogram": "^6.0.0",
     "prettier": "3.2.5",
@@ -72,6 +72,7 @@
     "typescript": "^5.4.5"
   },
   "peerDependencies": {
+    "miniprogram-api-typings": "^4.0.1",
     "mobx-miniprogram": "^6.0.0"
   },
   "husky": {

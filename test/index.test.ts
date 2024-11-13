@@ -373,7 +373,21 @@ test('component with store constructor (map typing)', async () => {
 })
 
 test('component with store constructor (multiple stores)', async () => {
-  const store = makeAutoObservable({
+  const store1 = makeAutoObservable({
+    numA: 1,
+    numB: 2,
+    get sum(): number {
+      return this.numA + this.numB
+    },
+    update: function (times: number) {
+      for (let i = 0; i < times; i += 1) {
+        const sum = this.sum
+        this.numA = this.numB
+        this.numB = sum
+      }
+    },
+  })
+  const store2 = makeAutoObservable({
     numA: 1,
     numB: 2,
     get sum(): number {
@@ -388,18 +402,18 @@ test('component with store constructor (multiple stores)', async () => {
     },
   })
 
-  const component = renderComponent(undefined, '<view>{{sum}}</view>', (Component) => {
+  const component = renderComponent(undefined, '<view>{{sum}}</view><view>{{s}}</view>', (Component) => {
     ;(globalThis as any).Component = Component
     ComponentWithStore({
       storeBindings: [
         {
-          store,
+          store: store1,
           fields: ['sum'] as const,
           actions: ['update'] as const,
         },
         {
-          store,
-          fields: { a: () => store.numA, s: 'sum' } as const,
+          store: store2,
+          fields: { a: () => store2.numA, s: 'sum' } as const,
           actions: { up: 'update' } as const,
         },
       ] as const,
@@ -411,5 +425,5 @@ test('component with store constructor (multiple stores)', async () => {
     ;(globalThis as any).Component = undefined
   }) as any
   await waitTick()
-  expect(innerHTML(component)).toBe('<view>13</view>')
+  expect(innerHTML(component)).toBe('<view>5</view><view>8</view>')
 })
