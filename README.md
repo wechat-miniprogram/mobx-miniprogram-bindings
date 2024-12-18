@@ -44,7 +44,7 @@ export const store = observable({
 })
 ```
 
-3. 在 Page 或 Component 构造器中使用：
+3. 在 Component 构造器中使用：
 
 ```js
 import { storeBindingsBehavior } from 'mobx-miniprogram-bindings'
@@ -177,7 +177,7 @@ Component({
 
 ### 手工绑定
 
-**手工绑定** 更加灵活，适用于 store 需要在 `onLoad` （自定义组件 attached ）时才能确定的情况。
+**手工绑定** 更加灵活，适用于 store 需要在 `onLoad` （自定义组件 attached ）时才能确定的情况。目前，在 Page 构造器内使用时，也必须用这种方式。
 
 做法：使用 `createStoreBindings` 创建绑定，它会返回一个包含清理函数的对象用于取消绑定。
 
