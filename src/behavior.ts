@@ -20,6 +20,7 @@ export const behavior = Behavior({
   definitionFilter: (defFields: TDefFields) => {
     defFields.methods = defFields.methods || {}
     const { storeBindings } = defFields
+    delete defFields.storeBindings
     defFields.methods._mobxMiniprogramBindings = () => {
       return storeBindings
     }
