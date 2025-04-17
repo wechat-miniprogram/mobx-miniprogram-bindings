@@ -405,6 +405,7 @@ test('component with store constructor (multiple stores)', async () => {
   const component = renderComponent(undefined, '<view>{{sum}}</view><view>{{s}}</view>', (Component) => {
     ;(globalThis as any).Component = Component
     ComponentWithStore({
+      data: {},
       storeBindings: [
         {
           store: store1,
@@ -420,6 +421,10 @@ test('component with store constructor (multiple stores)', async () => {
       created() {
         this.update(1)
         this.up(2)
+      },
+      attached() {
+        expect(this.data.sum).toBe(5)
+        expect(this.data.s).toBe(8)
       },
     })
     ;(globalThis as any).Component = undefined
