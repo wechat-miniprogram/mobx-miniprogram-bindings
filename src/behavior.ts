@@ -20,10 +20,11 @@ export const behavior = Behavior({
   definitionFilter: (defFields: TDefFields) => {
     defFields.methods = defFields.methods || {}
     const { storeBindings } = defFields
-    defFields.methods._mobxMiniprogramBindings = () => {
-      return storeBindings
-    }
+    defFields.storeBindings = undefined
     if (storeBindings) {
+      defFields.methods._mobxMiniprogramBindings = () => {
+        return storeBindings
+      }
       if (Array.isArray(storeBindings)) {
         storeBindings.forEach((binding) => {
           createActions(defFields.methods, binding)
