@@ -89,6 +89,42 @@ test('declarative creation', async () => {
   expect(innerHTML(component)).toBe('<view>2+3=5</view>')
 })
 
+test('declarative creation with page constructor', async () => {
+  const store = makeAutoObservable({
+    numA: 1,
+    numB: 2,
+    get sum() {
+      return this.numA + this.numB
+    },
+    update: function () {
+      const sum = this.sum
+      this.numA = this.numB
+      this.numB = sum
+    },
+  })
+
+  const component = renderComponent(
+    undefined,
+    '<view>{{numA}}+{{numB}}={{sum}}</view>',
+    (_Component, env) => {
+      env.Page({
+        behaviors: [storeBindingsBehavior],
+        storeBindings: {
+          store,
+          fields: ['numA', 'numB', 'sum'],
+          actions: { up: 'update' },
+        },
+      } as any)
+    },
+  ) as any
+  await waitTick()
+  expect(innerHTML(component)).toBe('<view>1+2=3</view>')
+
+  component.up()
+  component.updateStoreBindings()
+  expect(innerHTML(component)).toBe('<view>2+3=5</view>')
+})
+
 test('destroy', async () => {
   const store = makeAutoObservable({
     numA: 1,
