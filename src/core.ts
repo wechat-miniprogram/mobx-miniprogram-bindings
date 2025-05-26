@@ -48,7 +48,7 @@ export const createDataFieldsReactions = <TStore extends Record<string, any>>(
   if (namespace && typeof namespace !== 'string') {
     throw new Error('[mobx-miniprogram] namespace only expect string')
   }
-  namespace = namespace.replace(new RegExp(' ', 'gm'), '')
+  namespace = namespace.replace(/ /gm, '')
 
   let namespaceData = Object.assign({}, target[namespace])
 
