@@ -38,7 +38,7 @@ export declare function ComponentWithStore<TStoreBindings extends IStoreBindings
 export declare function BehaviorWithStore<TStoreBindings extends IStoreBindings<any>, TData extends WechatMiniprogram.Component.DataOption, TProperty extends WechatMiniprogram.Component.PropertyOption, TMethod extends WechatMiniprogram.Component.MethodOption, TBehavior extends WechatMiniprogram.Component.BehaviorOption, TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {}>(options: StoreOptions<TStoreBindings, TData, TProperty, TMethod, TBehavior, TCustomInstanceProperty>): string;
 export declare function BehaviorWithStore<TStoreBindings extends IStoreBindings<any>[], TData extends WechatMiniprogram.Component.DataOption, TProperty extends WechatMiniprogram.Component.PropertyOption, TMethod extends WechatMiniprogram.Component.MethodOption, TBehavior extends WechatMiniprogram.Component.BehaviorOption, TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {}>(options: StoreListOptions<TStoreBindings, TData, TProperty, TMethod, TBehavior, TCustomInstanceProperty>): string;
 export declare const createStoreBindings: <TStore extends Record<string, any>>(target: any, options: IStoreBindings<TStore>) => StoreBindingsManager;
-export declare const storeBindingsBehavior: WechatMiniprogram.Behavior.BehaviorIdentifier<WechatMiniprogram.Component.DataOption, WechatMiniprogram.Component.PropertyOption, {
+export declare const storeBindingsBehavior: WechatMiniprogram.Behavior.Identifier<WechatMiniprogram.Component.DataOption, WechatMiniprogram.Component.PropertyOption, {
     updateStoreBindings(): void;
 }, WechatMiniprogram.Component.BehaviorOption>;
 export type InitializedStoreBindings = {

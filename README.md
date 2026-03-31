@@ -4,6 +4,9 @@
 
 > 此 behavior 依赖开发者工具的 npm 构建。具体详情可查阅 [官方 npm 文档](https://developers.weixin.qq.com/miniprogram/dev/devtools/npm.html) 。
 
+[![npm version](https://img.shields.io/npm/v/mobx-miniprogram-bindings.svg)](https://www.npmjs.com/package/mobx-miniprogram-bindings)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/wechat-miniprogram/mobx-miniprogram-bindings/test.yml)](https://github.com/wechat-miniprogram/mobx-miniprogram-bindings/actions)
+
 ## 使用方法
 
 需要小程序基础库版本 >= 2.11.0 的环境。
