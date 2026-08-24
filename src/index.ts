@@ -1,14 +1,14 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import 'miniprogram-api-typings'
 import { behavior } from './behavior'
-import { StoreBindingsManager, createActions, createDataFieldsReactions } from './core'
-import type * as adapter from 'glass-easel-miniprogram-adapter'
+import { type StoreBindingsManager, createActions, createDataFieldsReactions } from './core'
 
 type Action = string
 
 export interface IStoreBindings<T extends Record<string, any>> {
   namespace?: string
   store: T
-  fields: (keyof T)[] | { [k: string]: (keyof T | ((...args: any) => any)) }
+  fields: (keyof T)[] | { [k: string]: keyof T | ((...args: any) => any) }
   actions: (keyof T)[] | { [k: Action]: keyof T }
   structuralComparison?: boolean
 }
@@ -16,20 +16,20 @@ export interface IStoreBindings<T extends Record<string, any>> {
 type StoreData<T extends IStoreBindings<any>> = T['fields'] extends string[]
   ? { [k in T['fields'][number]]: T['store'][k] }
   : T['fields'] extends { [k: Action]: string | ((...args: any) => any) }
-  ? { [k in keyof T['fields']]: (
-    T['fields'][k] extends (...args: any) => any
-      ? ReturnType<T['fields'][k]>
-      : T['fields'][k] extends string
-      ? T['store'][T['fields'][k]]
-      : unknown
-  )}
-  : unknown
+    ? {
+        [k in keyof T['fields']]: T['fields'][k] extends (...args: any) => any
+          ? ReturnType<T['fields'][k]>
+          : T['fields'][k] extends string
+            ? T['store'][T['fields'][k]]
+            : unknown
+      }
+    : unknown
 
 type StoreAction<T extends IStoreBindings<any>> = T['actions'] extends string[]
   ? { [k in T['actions'][number]]: T['store'][k] }
   : T['actions'] extends { [k: Action]: string }
-  ? { [k in keyof T['actions']]: T['store'][T['actions'][k]] }
-  : unknown
+    ? { [k in keyof T['actions']]: T['store'][T['actions'][k]] }
+    : unknown
 
 type StoreOptions<
   TStoreBindings extends IStoreBindings<any>,
@@ -37,7 +37,7 @@ type StoreOptions<
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
   TBehavior extends WechatMiniprogram.Component.BehaviorOption,
-  TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
+  TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = object,
 > = (Partial<WechatMiniprogram.Component.Data<TData>> &
   Partial<WechatMiniprogram.Component.Property<TProperty>> &
   Partial<WechatMiniprogram.Component.Method<TMethod>> &
@@ -73,25 +73,25 @@ type StoreListOptions<
   }) &
   ThisType<
     WechatMiniprogram.Component.Instance<
-      TData
-        & StoreData<TStoreBindings[0]>
-        & StoreData<TStoreBindings[1]>
-        & StoreData<TStoreBindings[2]>
-        & StoreData<TStoreBindings[3]>
-        & StoreData<TStoreBindings[4]>
-        & StoreData<TStoreBindings[5]>
-        & StoreData<TStoreBindings[6]>
-        & StoreData<TStoreBindings[7]>,
+      TData &
+        StoreData<TStoreBindings[0]> &
+        StoreData<TStoreBindings[1]> &
+        StoreData<TStoreBindings[2]> &
+        StoreData<TStoreBindings[3]> &
+        StoreData<TStoreBindings[4]> &
+        StoreData<TStoreBindings[5]> &
+        StoreData<TStoreBindings[6]> &
+        StoreData<TStoreBindings[7]>,
       TProperty,
-      TMethod
-        & StoreAction<TStoreBindings[0]>
-        & StoreAction<TStoreBindings[1]>
-        & StoreAction<TStoreBindings[2]>
-        & StoreAction<TStoreBindings[3]>
-        & StoreAction<TStoreBindings[4]>
-        & StoreAction<TStoreBindings[5]>
-        & StoreAction<TStoreBindings[6]>
-        & StoreAction<TStoreBindings[7]>,
+      TMethod &
+        StoreAction<TStoreBindings[0]> &
+        StoreAction<TStoreBindings[1]> &
+        StoreAction<TStoreBindings[2]> &
+        StoreAction<TStoreBindings[3]> &
+        StoreAction<TStoreBindings[4]> &
+        StoreAction<TStoreBindings[5]> &
+        StoreAction<TStoreBindings[6]> &
+        StoreAction<TStoreBindings[7]>,
       TBehavior,
       TCustomInstanceProperty
     >
@@ -104,7 +104,22 @@ export function ComponentWithStore<
   TMethod extends WechatMiniprogram.Component.MethodOption,
   TBehavior extends WechatMiniprogram.Component.BehaviorOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreOptions<TStoreBindings, TData, TProperty, TMethod, TBehavior, TCustomInstanceProperty>): string;
+>(
+  options: StoreOptions<
+    TStoreBindings,
+    TData,
+    TProperty,
+    TMethod,
+    TBehavior,
+    TCustomInstanceProperty
+  >,
+): WechatMiniprogram.Component.Instance<
+  TData,
+  TProperty,
+  TMethod,
+  TBehavior,
+  TCustomInstanceProperty
+>
 export function ComponentWithStore<
   TStoreBindings extends IStoreBindings<any>[],
   TData extends WechatMiniprogram.Component.DataOption,
@@ -112,20 +127,53 @@ export function ComponentWithStore<
   TMethod extends WechatMiniprogram.Component.MethodOption,
   TBehavior extends WechatMiniprogram.Component.BehaviorOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreListOptions<TStoreBindings, TData, TProperty, TMethod, TBehavior, TCustomInstanceProperty>): string;
+>(
+  options: StoreListOptions<
+    TStoreBindings,
+    TData,
+    TProperty,
+    TMethod,
+    TBehavior,
+    TCustomInstanceProperty
+  >,
+): WechatMiniprogram.Component.Instance<
+  TData,
+  TProperty,
+  TMethod,
+  TBehavior,
+  TCustomInstanceProperty
+>
 export function ComponentWithStore<
-  TStoreBindings extends any,
+  TStoreBindings extends IStoreBindings<any>[],
   TData extends WechatMiniprogram.Component.DataOption,
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
   TBehavior extends WechatMiniprogram.Component.BehaviorOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreListOptions<any, TData, TProperty, TMethod, TBehavior, TCustomInstanceProperty>): string {
+>(
+  options: StoreListOptions<
+    TStoreBindings,
+    TData,
+    TProperty,
+    TMethod,
+    TBehavior,
+    TCustomInstanceProperty
+  >,
+): WechatMiniprogram.Component.Instance<
+  TData,
+  TProperty,
+  TMethod,
+  TBehavior,
+  TCustomInstanceProperty
+> {
   if (!Array.isArray(options.behaviors)) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     options.behaviors = [] as any
   }
-  (options.behaviors as any).unshift(behavior)
-  return Component(options)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+  ;(options.behaviors as any).unshift(behavior)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return Component(options) as any
 }
 
 export function BehaviorWithStore<
@@ -135,7 +183,16 @@ export function BehaviorWithStore<
   TMethod extends WechatMiniprogram.Component.MethodOption,
   TBehavior extends WechatMiniprogram.Component.BehaviorOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreOptions<TStoreBindings, TData, TProperty, TMethod, TBehavior, TCustomInstanceProperty>): string;
+>(
+  options: StoreOptions<
+    TStoreBindings,
+    TData,
+    TProperty,
+    TMethod,
+    TBehavior,
+    TCustomInstanceProperty
+  >,
+): WechatMiniprogram.Behavior.Identifier<TData, TProperty, TMethod, TBehavior>
 export function BehaviorWithStore<
   TStoreBindings extends IStoreBindings<any>[],
   TData extends WechatMiniprogram.Component.DataOption,
@@ -143,23 +200,46 @@ export function BehaviorWithStore<
   TMethod extends WechatMiniprogram.Component.MethodOption,
   TBehavior extends WechatMiniprogram.Component.BehaviorOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreListOptions<TStoreBindings, TData, TProperty, TMethod, TBehavior, TCustomInstanceProperty>): string;
+>(
+  options: StoreListOptions<
+    TStoreBindings,
+    TData,
+    TProperty,
+    TMethod,
+    TBehavior,
+    TCustomInstanceProperty
+  >,
+): WechatMiniprogram.Behavior.Identifier<TData, TProperty, TMethod, TBehavior>
 export function BehaviorWithStore<
-  TStoreBindings extends any,
+  TStoreBindings extends IStoreBindings<any>[],
   TData extends WechatMiniprogram.Component.DataOption,
   TProperty extends WechatMiniprogram.Component.PropertyOption,
   TMethod extends WechatMiniprogram.Component.MethodOption,
   TBehavior extends WechatMiniprogram.Component.BehaviorOption,
   TCustomInstanceProperty extends WechatMiniprogram.IAnyObject = {},
->(options: StoreListOptions<any, TData, TProperty, TMethod, TBehavior, TCustomInstanceProperty>): string {
+>(
+  options: StoreListOptions<
+    TStoreBindings,
+    TData,
+    TProperty,
+    TMethod,
+    TBehavior,
+    TCustomInstanceProperty
+  >,
+): WechatMiniprogram.Behavior.Identifier<TData, TProperty, TMethod, TBehavior> {
   if (!Array.isArray(options.behaviors)) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     options.behaviors = [] as any
   }
-  (options.behaviors as any).unshift(behavior)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+  ;(options.behaviors as any).unshift(behavior)
   return Behavior(options)
 }
 
-export const createStoreBindings = <TStore extends Record<string, any>>(target, options: IStoreBindings<TStore>): StoreBindingsManager => {
+export const createStoreBindings = <TStore extends Record<string, any>>(
+  target: WechatMiniprogram.Component.Instance<any, any, any, any>,
+  options: IStoreBindings<TStore>,
+): StoreBindingsManager => {
   createActions(target, options)
   return createDataFieldsReactions(target, options)
 }
@@ -171,9 +251,10 @@ export type InitializedStoreBindings = {
 }
 
 export const initStoreBindings = <TStore extends Record<string, any>>(
-  ctx: adapter.builder.BuilderContext<any, any, any>,
+  ctx: WechatMiniprogram.GlassEasel.TypeUtils.BuilderContext<any, any, any>,
   options: Omit<IStoreBindings<TStore>, 'actions'>,
 ): InitializedStoreBindings => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { self, lifetime } = ctx
 
   let storeBindings: StoreBindingsManager | undefined

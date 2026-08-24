@@ -1,6 +1,6 @@
 import 'miniprogram-api-typings'
-import { IStoreBindings } from './index'
-import { createActions, createDataFieldsReactions, StoreBindingsManager } from './core'
+import { type IStoreBindings } from './index'
+import { createActions, createDataFieldsReactions, type StoreBindingsManager } from './core'
 
 type TDefFields = WechatMiniprogram.Component.TrivialOption & {
   storeBindings?: IStoreBindings<any> | Array<IStoreBindings<any>>
@@ -8,7 +8,8 @@ type TDefFields = WechatMiniprogram.Component.TrivialOption & {
 
 type UninitializedThis = {
   updateStoreBindings: () => void
-  _mobxMiniprogramBindings: (() => IStoreBindings<any>) | StoreBindingsManager | StoreBindingsManager[] | null
+  _mobxMiniprogramBindings:
+    (() => IStoreBindings<any>) | StoreBindingsManager | StoreBindingsManager[] | null
 }
 
 type InitializedThis = {
@@ -27,10 +28,10 @@ export const behavior = Behavior({
       }
       if (Array.isArray(storeBindings)) {
         storeBindings.forEach((binding) => {
-          createActions(defFields.methods, binding)
+          createActions(defFields.methods as Record<string, any>, binding)
         })
       } else {
-        createActions(defFields.methods, storeBindings)
+        createActions(defFields.methods as Record<string, any>, storeBindings)
       }
     }
   },
@@ -39,6 +40,7 @@ export const behavior = Behavior({
       const self = this as unknown as UninitializedThis
       if (typeof self._mobxMiniprogramBindings !== 'function') return
       const storeBindings = self._mobxMiniprogramBindings()
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!storeBindings) {
         self._mobxMiniprogramBindings = null
         return

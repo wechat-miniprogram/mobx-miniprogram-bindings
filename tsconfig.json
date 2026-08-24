@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "module": "commonjs",
     "strict": true,
+    "module": "commonjs",
     "noImplicitAny": false,
+    "noImplicitThis": true,
     "removeComments": true,
     "target": "ESNEXT",
     "lib": ["ESNEXT", "DOM"],
@@ -11,10 +11,8 @@
     "sourceMap": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "declarationDir": "./types",
-    "emitDeclarationOnly": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["miniprogram-api-typings", "jest"]
   },
   "include": ["./src/**/*.ts", "./test/**/*.ts"]
 }
