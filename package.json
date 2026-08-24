@@ -17,7 +17,8 @@
     "gen_dts": "gulp dts",
     "test": "jest ./test/* --bail",
     "coverage": "jest ./test/* --coverage --bail",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "publish-version": "node publish-version.js"
   },
   "miniprogram": "dist",
   "repository": {
