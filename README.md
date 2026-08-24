@@ -53,7 +53,7 @@ export const store = observable({
 import { storeBindingsBehavior } from 'mobx-miniprogram-bindings'
 import { store } from './store'
 
-Component({
+export default Component({
   behaviors: [storeBindingsBehavior], // 添加这个 behavior
   data: {
     someData: '...',
@@ -88,7 +88,7 @@ Component({
 ```js
 import { ComponentWithStore } from 'mobx-miniprogram-bindings'
 
-ComponentWithStore({
+export default ComponentWithStore({
   data: {
     someData: '...',
   },
@@ -126,7 +126,7 @@ export const testBehavior = BehaviorWithStore({
 ```js
 import { initStoreBindings } from 'mobx-miniprogram-bindings'
 
-Component()
+export default Component()
   .init((ctx) => {
     const { listener } = ctx
     initStoreBindings(ctx, {
@@ -152,7 +152,7 @@ Component()
 ```js
 import { storeBindingsBehavior } from 'mobx-miniprogram-bindings'
 
-Component({
+export default Component({
   behaviors: [storeBindingsBehavior],
   storeBindings: {
     /* 绑定配置（见下文） */
@@ -165,7 +165,7 @@ Component({
 ```js
 import { storeBindingsBehavior } from 'mobx-miniprogram-bindings'
 
-Component({
+export default Component({
   behaviors: [storeBindingsBehavior],
   storeBindings: [
     {
@@ -248,7 +248,7 @@ Page({
 与 [miniprogram-computed](https://github.com/wechat-miniprogram/computed) 时，在 behaviors 列表中 `computedBehavior` 必须在后面：
 
 ```js
-Component({
+export default Component({
   behaviors: [storeBindingsBehavior, computedBehavior],
   /* ... */
 })
@@ -259,7 +259,7 @@ Component({
 如果只是更新对象中的一部分（子字段），是不会引发界面变化的！例如：
 
 ```js
-Component({
+export default Component({
   behaviors: [storeBindingsBehavior],
   storeBindings: {
     store,
