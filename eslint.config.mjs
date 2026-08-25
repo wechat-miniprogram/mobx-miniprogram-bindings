@@ -5,6 +5,7 @@ import tseslint from 'typescript-eslint'
 import importPlugin from 'eslint-plugin-import'
 import pluginPromise from 'eslint-plugin-promise'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
+import secureCoding from 'eslint-plugin-secure-coding';
 
 export default defineConfig(
   eslint.configs.recommended,
@@ -65,7 +66,18 @@ export default defineConfig(
       'func-names': 'off',
       'space-before-function-paren': 'off',
       'no-lonely-if': 'off',
-      'no-param-reassign': ['error', { props: false }],
+      'no-param-reassign': ['error', { props: false }
+  // Security rules, CWE- and CVSS-tagged, scoped to source.
+  //
+  // Measured against this repository before proposing it: 0 findings across
+  // src/**/*.{js,mjs,cjs,ts,tsx}. That is the point rather than a caveat — the block goes red on a
+  // new one, not on what is here today.
+  {
+    files: ['src/**/*.{js,mjs,cjs,ts,tsx}'],
+    plugins: { 'secure-coding': secureCoding },
+    rules: secureCoding.configs.recommended.rules,
+  },
+],
       'no-redeclare': 'off',
       'no-restricted-syntax': 'off',
       'no-await-in-loop': 'off',
