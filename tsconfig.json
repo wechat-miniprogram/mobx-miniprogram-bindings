@@ -12,7 +12,10 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "types": ["miniprogram-api-typings", "jest"]
+    "types": ["miniprogram-api-typings", "jest"],
+    "declaration": true,
+    "declarationDir": "./types",
+    "emitDeclarationOnly": true
   },
   "include": ["./src/**/*.ts", "./test/**/*.ts"]
 }
